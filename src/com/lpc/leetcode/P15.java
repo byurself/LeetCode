@@ -28,7 +28,7 @@ public class P15 {
         if (nums == null || nums.length < 3) {
             return list;
         }
-        // 对数组从大到小进行排序
+        // 对数组从小到大进行排序
         Arrays.sort(nums);
         for (int i = 0; i < nums.length; i++) {
             if (nums[i] > 0) break; // 如果第i个数已经大于0了，则不可能找到三个数之和为0

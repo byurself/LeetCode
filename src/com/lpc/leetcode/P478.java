@@ -12,7 +12,7 @@ public class P478 {
     Random random;
     double xc, yc, r;
 
-    public Solution(double radius, double x_center, double y_center) {
+    public P478(double radius, double x_center, double y_center) {
         random = new Random();
         xc = x_center;
         yc = y_center;

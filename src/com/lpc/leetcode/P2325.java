@@ -20,7 +20,7 @@ public class P2325 {
                 map.put(c, t++);
             }
         }
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < message.length(); i++) {
             char c = message.charAt(i);
             if (c == ' ') {

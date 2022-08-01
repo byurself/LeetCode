@@ -5,7 +5,7 @@ package com.lpc.leetcode;
  * @author byu_rself
  * @date 2022/8/1 8:58
  */
-public class Offer25 {
+public class Offer025 {
 
     public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
         if (l1 == null) {

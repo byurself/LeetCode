@@ -11,7 +11,7 @@ import java.util.List;
  * @author byu_rself
  * @date 2022/8/2 11:32
  */
-public class Offer026 {
+public class Offer006 {
 
     @Test
     public void solution() {

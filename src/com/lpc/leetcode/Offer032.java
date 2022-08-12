@@ -51,7 +51,7 @@ public class Offer032 {
         if (root != null) queue.addLast(root);
         while (!queue.isEmpty()) {
             LinkedList<Integer> list = new LinkedList<>();
-            int size = queue.size(), level = ans.size() % 2;
+            int size = queue.size(), level = ans.size();
             while (size-- > 0) {
                 TreeNode p = queue.pollFirst();
                 if (level % 2 == 0) list.addLast(p.val);

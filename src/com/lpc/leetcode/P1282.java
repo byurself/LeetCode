@@ -29,6 +29,21 @@ public class P1282 {
 
     public List<List<Integer>> groupThePeople(int[] groupSizes) {
         Map<Integer, List<Integer>> map = new HashMap<>();
+        List<List<Integer>> ans = new ArrayList<>();
+        for (int i = 0; i < groupSizes.length; i++) {
+            int x = groupSizes[i];
+            if (map.get(x) == null) map.put(x, new ArrayList<>());
+            map.get(x).add(i);
+            if (map.get(x).size() == x) {
+                ans.add(map.get(x));
+                map.put(x, null);
+            }
+        }
+        return ans;
+    }
+
+    public List<List<Integer>> groupThePeople1(int[] groupSizes) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
         for (int i = 0; i < groupSizes.length; i++) {
             List<Integer> list = map.getOrDefault(groupSizes[i], new ArrayList<>());
             list.add(i);

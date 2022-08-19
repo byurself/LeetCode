@@ -2,7 +2,9 @@ package com.lpc.leetcode;
 
 import org.junit.Test;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 /**
@@ -28,6 +30,20 @@ public class Offer006 {
         for (int n : res) {
             System.out.println(n + "\t");
         }
+    }
+
+    public int[] reversePrint1(ListNode head) {
+        Deque<Integer> stack = new ArrayDeque<>();
+        while (head != null) {
+            stack.push(head.val);
+            head = head.next;
+        }
+        int n = stack.size();
+        int[] ans = new int[n];
+        for (int i = 0; i < n; i++) {
+            ans[i] = stack.pop();
+        }
+        return ans;
     }
 
     List<Integer> list = new ArrayList<>();

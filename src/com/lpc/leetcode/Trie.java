@@ -32,6 +32,7 @@ public class Trie {
             if (node.next[c - 'a'] == null) {
                 node.next[c - 'a'] = new Trie();
             }
+            node = node.next[c - 'a'];
         }
         node.isEnd = true;
     }
@@ -43,7 +44,8 @@ public class Trie {
         Trie node = this;
         for (int i = 0; i < word.length(); i++) {
             char c = word.charAt(i);
-            if (node.next[c - 'a'] == null) {
+            node = node.next[c - 'a'];
+            if (node == null) {
                 return false;
             }
         }
@@ -57,7 +59,8 @@ public class Trie {
         Trie node = this;
         for (int i = 0; i < prefix.length(); i++) {
             char c = prefix.charAt(i);
-            if (node.next[c - 'a'] == null) {
+            node = node.next[c - 'a'];
+            if (node == null) {
                 return false;
             }
         }

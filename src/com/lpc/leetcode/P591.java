@@ -29,7 +29,7 @@ public class P591 {
                 if (i == n - 1) {
                     return false;
                 }
-                if (code.charAt(i + 1) == '/') {
+                if (code.charAt(i + 1) == '/') { // 遇到了结束标签
                     int j = code.indexOf('>', i);
                     if (j < 0) {
                         return false;
@@ -43,7 +43,7 @@ public class P591 {
                     if (tags.isEmpty() && i != n) {
                         return false;
                     }
-                } else if (code.charAt(i + 1) == '!') {
+                } else if (code.charAt(i + 1) == '!') { // 遇到了个cdata
                     if (tags.isEmpty()) {
                         return false;
                     }

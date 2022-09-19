@@ -3,6 +3,7 @@ package com.lpc.leetcode;
 import org.junit.Test;
 
 import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Queue;
 
 /**
@@ -22,11 +23,30 @@ public class P933 {
         System.out.println(recentCounter.ping(3002));  // requests = [1, 100, 3001, 3002]，范围是 [2,3002]，返回 3
     }
 
-    static class RecentCounter {
+    private static class RecentCounter {
+
+        Deque<Integer> queue;
+
+        public RecentCounter() {
+            queue = new ArrayDeque<>();
+        }
+
+        public int ping(int t) {
+            queue.offerLast(t);
+            // 当队首元素小于当前请求时间-3000ms，则在队列中删除该元素
+            while (queue.peek() < t - 3000) {
+                queue.pollFirst();
+            }
+            // 最后队列的所剩的元素个数
+            return queue.size();
+        }
+    }
+
+    static class RecentCounter1 {
 
         Queue<Integer> queue;
 
-        public RecentCounter() {
+        public RecentCounter1() {
             queue = new ArrayDeque<>();
         }
 

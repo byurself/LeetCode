@@ -2,6 +2,7 @@ package com.lpc.leetcode;
 
 import org.junit.Test;
 
+import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -19,9 +20,27 @@ public class P907 {
         System.out.println(sumSubarrayMins(arr));
     }
 
-    private static final int MOD = 1000000007;
+    private static final int MOD = (int) (1e9 + 7);
 
     public int sumSubarrayMins(int[] arr) {
+        if (arr == null || arr.length == 0) {
+            return 0;
+        }
+        int n = arr.length;
+        long ans = 0;
+        Deque<Integer> stack = new ArrayDeque<>();
+        for (int i = -1; i <= n; i++) {
+            while (!stack.isEmpty() && getElement(arr, n, stack.peek()) > getElement(arr, n, i)) {
+                int cur = stack.pop();
+                int l = stack.peek(), r = i;
+                ans = (ans + (long) (cur - l) * (r - cur) * arr[cur]) % MOD;
+            }
+            stack.push(i);
+        }
+        return (int) ans;
+    }
+
+    public int sumSubarrayMins2(int[] arr) {
         // 处理边界情况
         if (arr == null || arr.length == 0) {
             return 0;

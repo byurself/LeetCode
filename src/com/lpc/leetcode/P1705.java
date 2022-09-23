@@ -19,7 +19,7 @@ public class P1705 {
         System.out.println(eatenApples(apples, days));
     }
 
-    public int eatenApples(int[] apples, int[] days) {
+    public int eatenApples1(int[] apples, int[] days) {
         // 以[最后食用日期, 当日产生的苹果数量]存储，按最后食用日期升序排列
         PriorityQueue<int[]> q = new PriorityQueue<>((a, b) -> a[0] - b[0]);
         int ans = 0, time = 0, n = apples.length;
@@ -30,6 +30,23 @@ public class P1705 {
             if (!q.isEmpty()) {
                 int[] cur = q.poll();
                 // 如果对顶元素的最后食用日期大于当前时间并且在被食用一个苹果后仍有苹果剩余，则重新入队
+                if (cur[0] > time && --cur[1] > 0) q.add(cur);
+                ans++;
+            }
+            time++;
+        }
+        return ans;
+    }
+
+    public int eatenApples(int[] apples, int[] days) {
+        PriorityQueue<int[]> q = new PriorityQueue<>((a, b) -> a[0] - b[0]);
+        int n = apples.length, ans = 0, time = 0;
+        while (time < n || !q.isEmpty()) {
+            if (time < n && apples[time] > 0) q.offer(new int[]{time + days[time] - 1, apples[time]});
+            // 过期
+            while (!q.isEmpty() && q.peek()[0] < time) q.poll();
+            if (!q.isEmpty()) {
+                int[] cur = q.poll();
                 if (cur[0] > time && --cur[1] > 0) q.add(cur);
                 ans++;
             }

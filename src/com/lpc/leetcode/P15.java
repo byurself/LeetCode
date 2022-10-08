@@ -28,6 +28,32 @@ public class P15 {
         if (nums == null || nums.length < 3) {
             return list;
         }
+        Arrays.sort(nums);
+        for(int i = 0; i < nums.length - 2; i++){
+            if(nums[i] > 0) break;
+            if(i > 0 && nums[i] == nums[i - 1]) continue;
+            int l = i + 1, r = nums.length - 1;
+            while(l < r){
+                int sum = nums[i] + nums[l] + nums[r];
+                if(sum < 0){
+                    while(l < r && nums[l] == nums[++l]);
+                } else if (sum > 0) {
+                    while(l < r && nums[r] == nums[--r]);
+                } else {
+                    list.add((Arrays.asList(nums[i], nums[l], nums[r])));
+                    while(l < r && nums[l] == nums[++l]);
+                    while(l < r && nums[r] == nums[--r]);
+                }
+            }
+        }
+        return list;
+    }
+
+    public List<List<Integer>> threeSum1(int[] nums) {
+        List<List<Integer>> list = new ArrayList<>();
+        if (nums == null || nums.length < 3) {
+            return list;
+        }
         // 对数组从小到大进行排序
         Arrays.sort(nums);
         for (int i = 0; i < nums.length; i++) {

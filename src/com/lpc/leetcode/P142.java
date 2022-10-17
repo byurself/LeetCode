@@ -1,5 +1,8 @@
 package com.lpc.leetcode;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * 环形链表 II
  *
@@ -9,6 +12,17 @@ package com.lpc.leetcode;
 public class P142 {
 
     public ListNode detectCycle(ListNode head) {
+        ListNode p = head;
+        Set<ListNode> set = new HashSet<>();
+        while (p != null) {
+            if (set.contains(p)) return p;
+            else set.add(p);
+            p = p.next;
+        }
+        return null;
+    }
+
+    public ListNode detectCycle1(ListNode head) {
         ListNode slow = head, fast = head;
         do {
             if (fast == null || fast.next == null) return null;
@@ -18,7 +32,7 @@ public class P142 {
         slow = head;
         while (slow != fast) {
             slow = slow.next;
-            fast =fast.next;
+            fast = fast.next;
         }
         return slow;
     }

@@ -22,7 +22,37 @@ public class P17 {
         list.forEach(System.out::println);
     }
 
+    List<String> list;
+
     public List<String> letterCombinations(String digits) {
+        Map<Character, String> map = new HashMap<>() {{
+            put('2', "abc");
+            put('3', "def");
+            put('4', "ghi");
+            put('5', "jkl");
+            put('6', "mno");
+            put('7', "pqrs");
+            put('8', "tuv");
+            put('9', "wxyz");
+        }};
+        list = new ArrayList<>();
+        if (digits.equals("")) return list;
+        backtrack(map, digits, 0, new StringBuilder());
+        return list;
+    }
+
+    private void backtrack(Map<Character, String> map, String digits, int index, StringBuilder builder) {
+        if (index == digits.length()) list.add(builder.toString());
+        else {
+            String s = map.get(digits.charAt(index));
+            for (int i = 0; i < s.length(); i++) {
+                backtrack(map, digits, index + 1, builder.append(s.charAt(i)));
+                builder.deleteCharAt(index);
+            }
+        }
+    }
+
+    public List<String> letterCombinations1(String digits) {
         List<String> combinations = new ArrayList<String>();
         if (digits.length() == 0) {
             return combinations;
@@ -37,11 +67,12 @@ public class P17 {
             put('8', "tuv");
             put('9', "wxyz");
         }};
-        backtrack(combinations, phoneMap, digits, 0, new StringBuffer());
+        backtrack1(combinations, phoneMap, digits, 0, new StringBuffer());
         return combinations;
     }
 
-    private void backtrack(List<String> combinations, Map<Character, String> phoneMap, String digits, int index, StringBuffer combination) {
+    private void backtrack1(List<String> combinations, Map<Character, String> phoneMap, String digits,
+                            int index, StringBuffer combination) {
         if (index == digits.length()) {
             combinations.add(combination.toString());
         } else {
@@ -50,7 +81,7 @@ public class P17 {
             int lettersCount = letters.length();
             for (int i = 0; i < lettersCount; i++) {
                 combination.append(letters.charAt(i));
-                backtrack(combinations, phoneMap, digits, index + 1, combination);
+                backtrack1(combinations, phoneMap, digits, index + 1, combination);
                 combination.deleteCharAt(index);
             }
         }

@@ -11,6 +11,26 @@ import java.util.Map;
  */
 public class P2325 {
 
+    public String solution(String key, String message) {
+        Map<Character, Character> map = new HashMap<>();
+        char index = 'a';
+        for (int i = 0; i < key.length(); i++) {
+            char c = key.charAt(i);
+            if (!map.containsKey(c) && c != ' ') {
+                map.put(c, index++);
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < message.length(); i++) {
+            char c = message.charAt(i);
+            if (c == ' ') sb.append(c);
+            else sb.append(map.get(c));
+        }
+
+        return sb.toString();
+    }
+
     public String decodeMessage(String key, String message) {
         Map<Character, Character> map = new HashMap<>();
         char t = 'a';

@@ -32,3 +32,4 @@ public class P2331 {
             this.right = right;
         }
     }
+}

@@ -18,6 +18,19 @@ public class P713 {
     }
 
     public int numSubarrayProductLessThanK(int[] nums, int k) {
+        int ans = 0, n = nums.length;
+        int p = 1;
+        for (int l = 0, r = 0; r < n; r++) {
+            p *= nums[r];
+            while (l <= r && p >= k) {
+                p /= nums[l++];
+            }
+            ans += r - l + 1;
+        }
+        return ans;
+    }
+
+    public int numSubarrayProductLessThanK1(int[] nums, int k) {
         int count = 0, product = 1;
         int left = 0;
         for (int right = 0; right < nums.length; right++) {

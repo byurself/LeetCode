@@ -18,8 +18,23 @@ public class P3 {
         System.out.println(getLongestSubstring(s));
     }
 
-    // 获取最长字串长度
     public int lengthOfLongestSubstring(String s) {
+        char[] chars = s.toCharArray();
+        int length = chars.length, ans = 0;
+        int[] cnt = new int[128];
+        for (int l = 0, r = 0; r < length; r++) {
+            char c = chars[r];
+            cnt[c]++;
+            while (cnt[c] > 1) {
+                --cnt[chars[l++]];
+            }
+            ans = Math.max(ans, r - l + 1);
+        }
+        return ans;
+    }
+
+    // 获取最长字串长度
+    public int lengthOfLongestSubstring1(String s) {
         if (s.length() == 0) {
             return 0;
         }

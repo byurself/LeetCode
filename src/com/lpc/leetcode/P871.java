@@ -11,6 +11,26 @@ import java.util.PriorityQueue;
 public class P871 {
 
     public int minRefuelStops(int target, int startFuel, int[][] stations) {
+        int n = stations.length, x = 0, remain = startFuel, ans = 0;
+        PriorityQueue<Integer> q = new PriorityQueue<>((a, b) -> b - a);
+        int i = 0;
+        while (x < target) {
+            if (remain == 0) {
+                if (!q.isEmpty()) {
+                    remain += q.poll();
+                    ans++;
+                } else {
+                    return -1;
+                }
+            }
+            x += remain;
+            remain = 0;
+            while (i < n && stations[i][0] <= x) q.offer(stations[i++][1]);
+        }
+        return ans;
+    }
+
+    public int minRefuelStops2(int target, int startFuel, int[][] stations) {
         PriorityQueue<Integer> q = new PriorityQueue<>((a, b) -> b - a);
         int n = stations.length, x = 0, remain = startFuel, index = 0, ans = 0;
         while (x < target) {

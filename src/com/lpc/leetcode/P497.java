@@ -1,57 +1,41 @@
 package com.lpc.leetcode;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
- * Random Point in Non-overlapping Rectangles
+ * 非重叠矩形中的随机点
  *
  * @author byu_rself
  * @date 2022/6/9 13:32
  */
 public class P497 {
 
-    Random rand;
-    List<Integer> arr;
-    int[][] rects;
+    private int[][] rects;
+    private int[] sum;
+    private int n;
+    private Random random;
 
     public P497(int[][] rects) {
-        rand = new Random();
-        arr = new ArrayList<Integer>();
-        arr.add(0);
         this.rects = rects;
-        for (int[] rect : rects) {
-            int a = rect[0], b = rect[1], x = rect[2], y = rect[3];
-            arr.add(arr.get(arr.size() - 1) + (x - a + 1) * (y - b + 1));
+        this.n = rects.length;
+        this.sum = new int[n + 1];
+        random = new Random();
+        for (int i = 1; i <= n; i++) {
+            sum[i] = sum[i - 1] + (rects[i - 1][2] - rects[i - 1][0] + 1) * (rects[i - 1][3] - rects[i - 1][1] + 1);
         }
     }
 
     public int[] pick() {
-        int k = rand.nextInt(arr.get(arr.size() - 1));
-        int rectIndex = binarySearch(arr, k + 1) - 1;
-        k -= arr.get(rectIndex);
-        int[] rect = rects[rectIndex];
-        int a = rect[0], b = rect[1], y = rect[3];
-        int col = y - b + 1;
-        int da = k / col;
-        int db = k - col * da;
-        return new int[]{a + da, b + db};
-    }
-
-    private int binarySearch(List<Integer> arr, int target) {
-        int low = 0, high = arr.size() - 1;
-        while (low <= high) {
-            int mid = (high - low) / 2 + low;
-            int num = arr.get(mid);
-            if (num == target) {
-                return mid;
-            } else if (num > target) {
-                high = mid - 1;
-            } else {
-                low = mid + 1;
-            }
+        int target = random.nextInt(sum[n]) + 1;
+        int l = 0, r = n;
+        while (l < r) {
+            int mid = l + r >> 1;
+            if (sum[mid] >= target) r = mid;
+            else l = mid + 1;
         }
-        return low;
+        int[] cur = rects[r - 1];
+        int x = random.nextInt(cur[2] - cur[0] + 1) + cur[0];
+        int y = random.nextInt(cur[3] - cur[1] + 1) + cur[1];
+        return new int[]{x, y};
     }
 }

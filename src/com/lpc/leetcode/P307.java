@@ -8,12 +8,18 @@ package com.lpc.leetcode;
  */
 public class P307 {
 
-    private int[] tree;
-    private int[] nums;
-    private int n;
+    int[] tree;
+    int[] nums;
+    int n;
 
     private int lowbit(int x) {
         return x & -x;
+    }
+
+    private void add(int x, int val) {
+        for (int i = x; i <= n; i += lowbit(i)) {
+            tree[i] += val;
+        }
     }
 
     private int query(int x) {
@@ -24,17 +30,11 @@ public class P307 {
         return ans;
     }
 
-    private void add(int x, int u) {
-        for (int i = x; i <= n; i += lowbit(i)) {
-            tree[i] += u;
-        }
-    }
-
-    public P307(int[] nums) {
+    public P307 (int[] nums) {
         this.nums = nums;
-        n = nums.length;
-        tree = new int[n + 1];
-        for (int i = 0; i < n; i++) {
+        this.n = nums.length;
+        this.tree = new int[n + 1];
+        for (int i = 0; i < n; ++i) {
             add(i + 1, nums[i]);
         }
     }

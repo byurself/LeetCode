@@ -56,16 +56,16 @@ public class P1395 {
      */
     public int numTeams1(int[] rating) {
         int n = rating.length, ans = 0;
-        for (int j = 1; j < n - 1; j++) {
+        for (int j = 1; j < n - 1; ++j) {
             int iLess = 0, iMore = 0;
             int kLess = 0, kMore = 0;
-            for (int i = 0; i < j; i++) {
-                if (rating[i] < rating[j]) iLess++;
-                else if (rating[i] > rating[j]) iMore++;
+            for (int i = 0; i < j; ++i) {
+                if (rating[i] < rating[j]) ++iLess;
+                else if (rating[i] > rating[j]) ++iMore;
             }
-            for (int k = j + 1; k < n; k++) {
-                if (rating[k] < rating[j]) kLess++;
-                else if (rating[k] > rating[j]) kMore++;
+            for (int k = j + 1; k < n; ++k) {
+                if (rating[k] < rating[j]) ++kLess;
+                else if (rating[k] > rating[j]) ++kMore;
             }
             ans += iLess * kMore + iMore * kLess;
         }

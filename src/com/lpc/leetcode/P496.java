@@ -25,6 +25,35 @@ public class P496 {
     }
 
     public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        int n = nums1.length, m = nums2.length;
+        Deque<Integer> stack = new ArrayDeque<>();
+        Map<Integer, Integer> map = new HashMap<>();
+        int[] ans = new int[n];
+        for (int i = m - 1; i >= 0; --i) {
+            int cur = nums2[i];
+            while (!stack.isEmpty() && cur >= stack.peek()) stack.pop();
+            map.put(cur, stack.isEmpty() ? -1 : stack.peek());
+            stack.push(cur);
+        }
+        for (int i = 0; i < n; ++i) {
+            ans[i] = map.get(nums1[i]);
+        }
+        return ans;
+    }
+
+    public int[] nextGreaterElement3(int[] nums1, int[] nums2) {
+        int n = nums1.length, m = nums2.length;
+        int[] ans = new int[n];
+        for (int i = 0; i < n; ++i) {
+            int j = 0;
+            while (j < m && nums1[i] != nums2[j]) ++j;
+            while (j < m && nums1[i] >= nums2[j]) ++j;
+            ans[i] = j < m ? nums2[j] : -1;
+        }
+        return ans;
+    }
+
+    public int[] nextGreaterElement2(int[] nums1, int[] nums2) {
         int m = nums1.length, n = nums2.length;
         Deque<Integer> stack = new ArrayDeque<>();
         Map<Integer, Integer> map = new HashMap<>();

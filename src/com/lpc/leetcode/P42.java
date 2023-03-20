@@ -1,5 +1,7 @@
 package com.lpc.leetcode;
 
+import org.junit.Test;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -11,6 +13,29 @@ import java.util.Deque;
  */
 public class P42 {
 
+    @Test
+    public void solution() {
+        int[] height = new int[]{0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1};
+        System.out.println(trap4(height));
+    }
+
+    public int trap4(int[] height) {
+        int sum = 0, cur = 0, n = height.length;
+        int[] stack = new int[n];
+        int tt = -1;
+        while (cur < n) {
+            while (tt > -1 && height[cur] > height[stack[tt]]) {
+                int h = height[stack[tt--]];
+                if (tt == -1) break;
+                int l = cur - stack[tt] - 1;
+                int min = Math.min(height[stack[tt]], height[cur]);
+                sum += l * (min - h);
+            }
+            stack[++tt] = cur++;
+        }
+        return sum;
+    }
+
     /**
      * 单调栈
      */
@@ -18,16 +43,14 @@ public class P42 {
         int sum = 0, cur = 0;
         Deque<Integer> stack = new ArrayDeque<>();
         while (cur < height.length) {
-            // 如果栈不空并且当前指向的高度大于栈顶高度就一直循环
             while (!stack.isEmpty() && height[cur] > height[stack.peek()]) {
-                int h = height[stack.pop()]; // 出栈
+                int h = height[stack.pop()];
                 if (stack.isEmpty()) break;
-                int distance = cur - stack.peek() - 1; // 两堵墙之前的距离。
+                int l = cur - stack.peek() - 1;
                 int min = Math.min(height[stack.peek()], height[cur]);
-                sum = sum + distance * (min - h);
+                sum += l * (min - h);
             }
-            stack.push(cur);
-            cur++;
+            stack.push(cur++);
         }
         return sum;
     }

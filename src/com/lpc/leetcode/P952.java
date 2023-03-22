@@ -2,7 +2,7 @@ package com.lpc.leetcode;
 
 import org.junit.Test;
 
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * 按公因数计算最大组件大小
@@ -18,7 +18,57 @@ public class P952 {
         System.out.println(largestComponentSize(nums));
     }
 
+    int[] p;
+    int[] size;
+
+    private int find(int x) {
+        if (p[x] != x) p[x] = find(p[x]);
+        return p[x];
+    }
+
+    private void union(int x, int y) {
+        int px = find(x), py = find(y);
+        if (px == py) return;
+        size[px] += size[py];
+        p[py] = p[px];
+    }
+
     public int largestComponentSize(int[] nums) {
+        int n = nums.length, ans = 1;
+        p = new int[n];
+        size = new int[n];
+        for (int i = 0; i < n; ++i) {
+            p[i] = i;
+            size[i] = 1;
+        }
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int i = 0; i < n; ++i) {
+            int num = nums[i];
+            for (int j = 2; j * j <= num; ++j) {
+                if (num % j == 0) {
+                    List<Integer> list = map.getOrDefault(j, new ArrayList<>());
+                    list.add(i);
+                    map.put(j, list);
+                }
+                while (num % j == 0) num /= j;
+            }
+            if (num > 1) {
+                List<Integer> list = map.getOrDefault(num, new ArrayList<>());
+                list.add(i);
+                map.put(num, list);
+            }
+        }
+        for (Integer key : map.keySet()) {
+            List<Integer> list = map.get(key);
+            for (int i = 1; i < list.size(); ++i) {
+                union(list.get(0), list.get(i));
+                ans = Math.max(ans, size[find(list.get(0))]);
+            }
+        }
+        return ans;
+    }
+
+    public int largestComponentSize1(int[] nums) {
         int max = Arrays.stream(nums).max().getAsInt();
         UnionFind unionFind = new UnionFind(max + 1);
         for (int num : nums) {

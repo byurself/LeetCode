@@ -10,7 +10,51 @@ import java.util.Arrays;
  */
 public class P1032 {
 
-    private static int N = 2010 * 200, idx = 0;
+    private StringBuilder builder;
+    private Trie trie;
+
+    public P1032(String[] words) {
+        builder = new StringBuilder();
+        trie = new Trie();
+        for (String word : words) {
+            trie.insert(word);
+        }
+    }
+
+    public boolean query(char letter) {
+        builder.append(letter);
+        return trie.query(builder);
+    }
+
+    private static class Trie {
+        Trie[] children = new Trie[26];
+        boolean isEnd = false;
+
+        public void insert(String word) {
+            Trie node = this;
+            for (int i = word.length() - 1; i >= 0; --i) {
+                char c = word.charAt(i);
+                if (node.children[c - 'a'] == null) {
+                    node.children[c - 'a'] = new Trie();
+                }
+                node = node.children[c - 'a'];
+            }
+            node.isEnd = true;
+        }
+
+        public boolean query(StringBuilder s) {
+            Trie node = this;
+            for (int i = s.length() - 1, j = 0; i >= 0 && j < 201; --i, ++j) {
+                char c = s.charAt(i);
+                if (node.children[c - 'a'] == null) return false;
+                node = node.children[c - 'a'];
+                if (node.isEnd) return true;
+            }
+            return false;
+        }
+    }
+
+/*    private static int N = 2010 * 200, idx = 0;
     private static int[][] trie = new int[N][26];
     private static boolean[] isEnd = new boolean[N * 26];
     StringBuilder sb = new StringBuilder();
@@ -50,5 +94,5 @@ public class P1032 {
             if (query(i, n - 1)) return true;
         }
         return false;
-    }
+    }*/
 }

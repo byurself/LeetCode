@@ -21,6 +21,33 @@ public class P442 {
 
     public List<Integer> findDuplicates(int[] nums) {
         List<Integer> list = new ArrayList<>();
+        int n = nums.length;
+        for (int i = 0; i < n; ++i) {
+            int index = Math.abs(nums[i]) - 1;
+            if (nums[index] > 0) {
+                nums[index] = -nums[index];
+            } else {
+                list.add(index + 1);
+            }
+        }
+        return list;
+    }
+
+    public List<Integer> findDuplicates1(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        List<Integer> list = new ArrayList<>();
+        for (int num : nums) {
+            if (set.contains(num)) {
+                list.add(num);
+                continue;
+            }
+            set.add(num);
+        }
+        return list;
+    }
+
+    /*public List<Integer> findDuplicates(int[] nums) {
+        List<Integer> list = new ArrayList<>();
         for (int i = 0; i < nums.length; i++) {
             // 将数nums[i]-1作为下标
             int index = Math.abs(nums[i]) - 1;
@@ -45,5 +72,5 @@ public class P442 {
             set.add(num);
         }
         return list;
-    }
+    }*/
 }

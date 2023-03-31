@@ -28,50 +28,22 @@ public class P464 {
         return dfs(0, 0, maxChoosableInteger, desiredTotal);
     }
 
-    private boolean dfs(int use, int sum, int maxChoosableInteger, int desiredTotal) {
-        if (cache.containsKey(use)) return cache.get(use);
-        for (int i = 1; i <= maxChoosableInteger; i++) {
-            // 若i已被使用过，则跳过
-            if (((1 << i) & use) > 0) continue;
-            if (sum + i >= desiredTotal) {
-                cache.put(use, true);
-                return true;
-            }
-            if (!dfs((1 << i) | use, sum + i, maxChoosableInteger, desiredTotal)) {
-                cache.put(use, true);
-                return true;
-            }
-        }
-        cache.put(use, false);
-        return false;
-    }
-
-    Map<Integer, Boolean> map = new HashMap<Integer, Boolean>();
-
-    public boolean canIWin1(int maxChoosableInteger, int desiredTotal) {
-        if ((1 + maxChoosableInteger) * (maxChoosableInteger) / 2 < desiredTotal) {
-            return false;
-        }
-        return dfs1(maxChoosableInteger, 0, desiredTotal, 0);
-    }
-
-    public boolean dfs1(int maxChoosableInteger, int usedNumbers, int desiredTotal, int currentTotal) {
-        if (!map.containsKey(usedNumbers)) {
-            boolean res = false;
-            for (int i = 0; i < maxChoosableInteger; i++) {
-                if (((usedNumbers >> i) & 1) == 0) {
-                    if (i + 1 + currentTotal >= desiredTotal) {
-                        res = true;
-                        break;
-                    }
-                    if (!dfs(maxChoosableInteger, usedNumbers | (1 << i), desiredTotal, currentTotal + i + 1)) {
-                        res = true;
-                        break;
-                    }
+    private boolean dfs(int state, int sum, int maxChoosableInteger, int desiredTotal) {
+        if (cache.containsKey(state)) return cache.get(state);
+        for (int x = 1; x <= maxChoosableInteger; ++x) {
+            if (((1 << x) & state) == 0) { // 若x未被使用
+                if (sum + x >= desiredTotal) {
+                    cache.put(state, true);
+                    return true;
+                }
+                // 当前玩家选择x后，判断对方一定会输吗?若对方一定输，则当前玩家一定赢
+                if (!dfs((1 << x) | state, sum + x, maxChoosableInteger, desiredTotal)) {
+                    cache.put(state, true);
+                    return true;
                 }
             }
-            map.put(usedNumbers, res);
         }
-        return map.get(usedNumbers);
+        cache.put(state, false);
+        return false;
     }
 }

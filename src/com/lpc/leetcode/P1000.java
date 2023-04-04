@@ -10,7 +10,25 @@ import java.util.Arrays;
  */
 public class P1000 {
 
-    int[][] cache;
+    public int mergeStones(int[] stones, int k) {
+        int n = stones.length;
+        if ((n - 1) % (k - 1) > 0) return -1; // 无法合并成一堆
+        int[] s = new int[n + 1];
+        for (int i = 1; i <= n; ++i) s[i] = s[i - 1] + stones[i - 1];
+        int[][] f = new int[n][n];
+        for (int i = n - 1; i >= 0; --i)
+            for (int j = i + 1; j < n; ++j) {
+                f[i][j] = Integer.MAX_VALUE;
+                for (int m = i; m < j; m += k - 1) {
+                    f[i][j] = Math.min(f[i][j], f[i][m] + f[m + 1][j]);
+                }
+                // 可以合并成一堆
+                if ((j - i) % (k - 1) == 0) f[i][j] += s[j + 1] - s[i];
+            }
+        return f[0][n - 1];
+    }
+
+    /*int[][] cache;
     int[] s;
     int k;
 
@@ -39,7 +57,7 @@ public class P1000 {
             ans += s[j + 1] - s[i];
         }
         return cache[i][j] = ans;
-    }
+    }*/
 
 /*    int[][][] cache;
     int[] s;

@@ -11,7 +11,34 @@ import java.util.Deque;
  */
 public class P1034 {
 
-    int m, n, color;
+    static int[][] dirs = new int[][]{{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+
+    public int[][] colorBorder(int[][] grid, int row, int col, int color) {
+        int m = grid.length, n = grid[0].length;
+        int[][] ans = new int[m][n];
+        Deque<int[]> queue = new ArrayDeque<>();
+        queue.offer(new int[]{row, col});
+        while (!queue.isEmpty()) {
+            int[] cur = queue.poll();
+            int x = cur[0], y = cur[1], cnt = 0;
+            for (int[] dir : dirs) {
+                int nx = x + dir[0], ny = y + dir[1];
+                if (nx < 0 || nx >= m || ny < 0 || ny >= n) continue;
+                if (grid[nx][ny] != grid[x][y]) continue;
+                else ++cnt;
+                if (ans[x][y] == 0) queue.offer(new int[]{nx, ny});
+            }
+            ans[x][y] = cnt == 4 ? grid[x][y] : color;
+        }
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (ans[i][j] == 0) ans[i][j] = grid[i][j];
+            }
+        }
+        return ans;
+    }
+
+    /*int m, n, color;
     int[][] grid, ans;
     int[][] dirs = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
@@ -42,7 +69,7 @@ public class P1034 {
             dfs(nx, ny);
         }
         ans[x][y] = cnt == 4 ? grid[x][y] : color;
-    }
+    }*/
 
 /*    public int[][] colorBorder(int[][] grid, int row, int col, int color) {
         int m = grid.length, n = grid[0].length;

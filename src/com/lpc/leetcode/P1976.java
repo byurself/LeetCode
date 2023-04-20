@@ -32,25 +32,25 @@ public class P1976 {
             g[a][b] = g[b][a] = 0;
             if (dist[a] + c == dist[b]) {
                 g[a][b] = c;
-                in[b]++;
+                ++in[b];
             } else if (dist[b] + c == dist[a]) {
                 g[b][a] = c;
-                in[a]++;
+                ++in[a];
             }
         }
-        Deque<Integer> d = new ArrayDeque<>();
-        for (int i = 0; i < n; i++) {
-            if (in[i] == 0) d.addLast(i);
+        Deque<Integer> queue = new ArrayDeque<>();
+        for (int i = 0; i < n; ++i) {
+            if (in[i] == 0) queue.offer(i);
         }
         int[] f = new int[n];
         f[0] = 1;
-        while (!d.isEmpty()) {
-            int x = d.pollFirst();
-            for (int i = 0; i < n; i++) {
+        while (!queue.isEmpty()) {
+            int x = queue.poll();
+            for (int i = 0; i < n; ++i) {
                 if (g[x][i] == 0) continue;
                 f[i] += f[x];
                 f[i] %= MOD;
-                if (--in[i] == 0) d.addLast(i);
+                if (--in[i] == 0) queue.offer(i);
             }
         }
         return f[n - 1];
@@ -58,14 +58,14 @@ public class P1976 {
 
     private void dijkstra() {
         Arrays.fill(dist, INF);
-        dist[0] = 0;
-        for (int i = 0; i < n; i++) {
+        dist[0] = 0L;
+        for (int i = 0; i < n; ++i) {
             int t = -1;
-            for (int j = 0; j < n; j++) {
+            for (int j = 0; j < n; ++j) {
                 if (!visited[j] && (t == -1 || dist[j] < dist[t])) t = j;
             }
             visited[t] = true;
-            for (int j = 0; j < n; j++) {
+            for (int j = 0; j < n; ++j) {
                 if (g[t][j] == 0) continue;
                 dist[j] = Math.min(dist[j], dist[t] + g[t][j]);
             }

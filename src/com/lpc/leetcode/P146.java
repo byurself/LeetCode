@@ -66,7 +66,7 @@ public class P146 {
     private void deleteKey(int key) {
         Node x = map.get(key);
         cache.remove(x);
-        map.remove(x);
+        map.remove(key);
     }
 
     private void removeLeastRecently() {

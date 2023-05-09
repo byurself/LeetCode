@@ -22,6 +22,30 @@ public class P1606 {
     }
 
     public List<Integer> busiestServers(int k, int[] arrival, int[] load) {
+        int n = arrival.length, max = 0;
+        int[] cnt = new int[k];
+        TreeSet<Integer> available = new TreeSet<>();
+        for (int i = 0; i < k; ++i) available.add(i);
+        PriorityQueue<int[]> q = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+        for (int i = 0; i < n; ++i) {
+            int startTime = arrival[i], endTime = startTime + load[i];
+            while (!q.isEmpty() && q.peek()[1] <= startTime) available.add(q.poll()[0]);
+            if (available.isEmpty()) continue;
+            Integer p = available.ceiling(i % k);
+            if (p == null) p = available.first();
+            ++cnt[p];
+            available.remove(p);
+            q.offer(new int[]{p, endTime});
+            max = Math.max(max, cnt[p]);
+        }
+        List<Integer> ans = new ArrayList<>();
+        for (int i = 0; i < k; ++i) {
+            if (cnt[i] == max) ans.add(i);
+        }
+        return ans;
+    }
+
+    public List<Integer> busiestServers1(int k, int[] arrival, int[] load) {
         // 空闲服务器集合
         TreeSet<Integer> available = new TreeSet<>();
         for (int i = 0; i < k; i++) {

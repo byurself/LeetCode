@@ -1,7 +1,5 @@
 package com.lpc.leetcode;
 
-import java.util.Arrays;
-
 /**
  * 字符流
  *
@@ -10,7 +8,54 @@ import java.util.Arrays;
  */
 public class P1032 {
 
-    private StringBuilder builder;
+    Trie trie;
+    StringBuilder builder;
+
+    public P1032(String[] words) {
+        trie = new Trie();
+        for (String word : words) trie.insert(word);
+        builder = new StringBuilder();
+    }
+
+    public boolean query(char letter) {
+        builder.append(letter);
+        return trie.query(builder);
+    }
+
+    private static class Trie {
+        private Trie[] next;
+        private boolean isEnd;
+
+        public Trie() {
+            next = new Trie[26];
+            isEnd = false;
+        }
+
+        public void insert(String word) {
+            Trie node = this;
+            for (int i = word.length() - 1; i >= 0; --i) {
+                char c = word.charAt(i);
+                if (node.next[c - 'a'] == null) {
+                    node.next[c - 'a'] = new Trie();
+                }
+                node = node.next[c - 'a'];
+            }
+            node.isEnd = true;
+        }
+
+        public boolean query(StringBuilder word) {
+            Trie node = this;
+            for (int i = word.length() - 1; i >= 0; --i) {
+                char c = word.charAt(i);
+                if (node.next[c - 'a'] == null) return false;
+                node = node.next[c - 'a'];
+                if (node.isEnd) return true;
+            }
+            return false;
+        }
+    }
+
+/*    private StringBuilder builder;
     private Trie trie;
 
     public P1032(String[] words) {
@@ -52,7 +97,7 @@ public class P1032 {
             }
             return false;
         }
-    }
+    }*/
 
 /*    private static int N = 2010 * 200, idx = 0;
     private static int[][] trie = new int[N][26];

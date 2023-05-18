@@ -23,6 +23,26 @@ public class P1190 {
 
     public String reverseParentheses(String s) {
         Deque<Character> stack = new ArrayDeque<>();
+        for (int i = 0; i < s.length(); ++i) {
+            char c = s.charAt(i);
+            if (c == ')') {
+                List<Character> list = new ArrayList<>();
+                while (stack.peek() != '(') list.add(stack.pop());
+                stack.pop();
+                for (Character e : list) {
+                    stack.push(e);
+                }
+            } else {
+                stack.push(c);
+            }
+        }
+        StringBuilder builder = new StringBuilder();
+        while (!stack.isEmpty()) builder.append(stack.removeLast());
+        return builder.toString();
+    }
+
+    public String reverseParentheses1(String s) {
+        Deque<Character> stack = new ArrayDeque<>();
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             if (c == '(') stack.push(c);

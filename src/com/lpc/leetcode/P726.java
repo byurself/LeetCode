@@ -18,7 +18,94 @@ public class P726 {
         System.out.println(countOfAtoms(s));
     }
 
-    public String countOfAtoms(String s) {
+    public String countOfAtoms(String formula) {
+        int n = formula.length();
+        char[] s = formula.toCharArray();
+        Map<String, Integer> map = new HashMap<>();
+        Deque<String> stack = new ArrayDeque<>();
+        int i = 0, index = 0;
+        while (i < n) {
+            char c = s[i];
+            if (c == '(' || c == ')') {
+                stack.push(String.valueOf(c));
+                ++i;
+            } else {
+                if (Character.isDigit(c)) {
+                    // 获取完整的数字
+                    int j = i;
+                    while (j < n && Character.isDigit(s[j])) ++j;
+                    String number = formula.substring(i, j);
+                    int cnt = Integer.parseInt(number);
+                    i = j;
+
+                    // 若栈顶为')'，则当前数值可以应用给连续一段原子中
+                    if (!stack.isEmpty() && stack.peek().equals(")")) {
+                        List<String> list = new ArrayList<>();
+                        stack.pop(); // 弹出')'
+                        while (!stack.isEmpty() && !stack.peek().equals("(")) {
+                            String cur = stack.pop();
+                            map.merge(cur, 1, (a, b) -> a * cnt);
+                            // map.put(cur, map.getOrDefault(cur, 1) * cnt);
+                            list.add(cur);
+                        }
+                        stack.pop(); // 弹出'('
+                        for (int k = list.size() - 1; k >= 0; --k) {
+                            stack.push(list.get(k));
+                        }
+                    } else {
+                        // 栈顶不是')'，当前数值只能给栈顶的原子
+                        String cur = stack.peek();
+                        map.merge(cur, 1, (a, b) -> a * cnt);
+                        // map.put(cur, map.getOrDefault(cur, 1) * cnt);
+                    }
+                } else {
+                    // 获取完整的原子名
+                    int j = i + 1;
+                    while (j < n && Character.isLowerCase(s[j])) ++j;
+                    String cur = formula.substring(i, j) + "_" + index++;
+                    map.merge(cur, 1, Integer::sum);
+                    i = j;
+                    stack.push(cur);
+                }
+            }
+        }
+
+        // 将不同编号的相同原子进行合并
+        Map<String, Node> m = new HashMap<>();
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            String key = entry.getKey();
+            int cnt = entry.getValue();
+            String atom = key.split("_")[0];
+            Node node = null;
+            if (m.containsKey(atom)) node = m.get(atom);
+            else node = new Node(atom, 0);
+            node.v += cnt;
+            m.put(atom, node);
+        }
+
+        // 使用优先队列对Node进行字典序排序并构造答案
+        PriorityQueue<Node> q = new PriorityQueue<>((a, b) -> a.k.compareTo(b.k));
+        for (String atom : m.keySet()) q.offer(m.get(atom));
+        StringBuilder builder = new StringBuilder();
+        while (!q.isEmpty()) {
+            Node cur = q.poll();
+            builder.append(cur.k);
+            if (cur.v > 1) builder.append(cur.v);
+        }
+        return builder.toString();
+    }
+
+    private static class Node {
+        private String k;
+        private int v;
+
+        public Node(String k, int v) {
+            this.k = k;
+            this.v = v;
+        }
+    }
+
+/*    public String countOfAtoms(String s) {
         int n = s.length();
         char[] cs = s.toCharArray();
         Map<String, Integer> map = new HashMap<>();
@@ -109,5 +196,5 @@ public class P726 {
             s = _s;
             v = _v;
         }
-    }
+    }*/
 }

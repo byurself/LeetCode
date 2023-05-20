@@ -26,20 +26,20 @@ public class P239 {
     public int[] maxSlidingWindow(int[] nums, int k) {
         if (nums == null || nums.length < 2) return nums;
         Deque<Integer> queue = new ArrayDeque<>();
-        int length = nums.length;
-        int[] ans = new int[length - k + 1];
-        for (int i = 0; i < length; i++) {
+        int n = nums.length;
+        int[] ans = new int[n - k + 1];
+        for (int i = 0; i < n; ++i) {
             // 队列内从大到小
             while (!queue.isEmpty() && nums[queue.peekLast()] <= nums[i]) {
                 queue.pollLast();
             }
-            queue.addLast(i);
-            if (queue.peek() <= i - k) {
-                queue.poll();
+            queue.offerLast(i);
+            if (queue.peekFirst() <= i - k) {
+                queue.pollFirst();
             }
             // 窗口形成
             if (i + 1 >= k) {
-                ans[i + 1 - k] = nums[queue.peek()];
+                ans[i + 1 - k] = nums[queue.peekFirst()];
             }
         }
         return ans;

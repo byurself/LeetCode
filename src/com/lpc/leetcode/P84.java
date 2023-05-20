@@ -11,25 +11,24 @@ import java.util.Deque;
  * @date 2022/10/3 22:36
  */
 public class P84 {
-
     public int largestRectangleArea(int[] heights) {
-        int length = heights.length, ans = 0;
-        int[] l = new int[length], r = new int[length];
+        int n = heights.length, ans = 0;
+        int[] l = new int[n], r = new int[n];
         Arrays.fill(l, -1);
-        Arrays.fill(r, length);
+        Arrays.fill(r, n);
         Deque<Integer> stack = new ArrayDeque<>();
         // 确定右边界
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < n; i++) {
             while (!stack.isEmpty() && heights[stack.peek()] > heights[i]) r[stack.pop()] = i;
             stack.push(i);
         }
         stack.clear();
         // 确定左边界
-        for (int i = length - 1; i >= 0; i--) {
+        for (int i = n - 1; i >= 0; i--) {
             while (!stack.isEmpty() && heights[stack.peek()] > heights[i]) l[stack.pop()] = i;
             stack.push(i);
         }
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < n; i++) {
             int height = heights[i], width = r[i] - l[i] - 1;
             ans = Math.max(ans, height * width);
         }

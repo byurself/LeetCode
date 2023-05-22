@@ -22,6 +22,20 @@ public class P739 {
 
     public int[] dailyTemperatures(int[] temperatures) {
         int n = temperatures.length;
+        int[] ans = new int[n], stack = new int[n];
+        int tt = -1;
+        for (int i = 0; i < n; ++i) {
+            while (tt > -1 && temperatures[i] > temperatures[stack[tt]]) {
+                int index = stack[tt--];
+                ans[index] = i - index;
+            }
+            stack[++tt] = i;
+        }
+        return ans;
+    }
+
+    public int[] dailyTemperatures1(int[] temperatures) {
+        int n = temperatures.length;
         int[] ans = new int[n];
         Deque<Integer> stack = new ArrayDeque<>();
         for (int i = 0; i < n; i++) {

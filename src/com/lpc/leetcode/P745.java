@@ -1,7 +1,9 @@
 package com.lpc.leetcode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 前缀和后缀搜索
@@ -11,7 +13,98 @@ import java.util.List;
  */
 public class P745 {
 
-    private static class TrieNode {
+    Trie trie1, trie2;
+
+    public P745(String[] words) {
+        trie1 = new Trie();
+        trie2 = new Trie();
+        for (int i = 0; i < words.length; ++i) {
+            trie1.insert(words[i], i, false);
+            trie2.insert(words[i], i, true);
+        }
+    }
+
+    public int f(String pref, String suff) {
+        return query(pref, suff);
+    }
+
+    private int query(String pref, String suff) {
+        int n = pref.length(), m = suff.length();
+        Trie node = trie1;
+        for (int i = 0; i < n; ++i) {
+            int u = pref.charAt(i) - 'a';
+            if (node.next[u] == null) return -1;
+            node = node.next[u];
+        }
+        List<Integer> list1 = node.idxs;
+        node = trie2;
+        for (int i = m - 1; i >= 0; --i) {
+            int u = suff.charAt(i) - 'a';
+            if (node.next[u] == null) return -1;
+            node = node.next[u];
+        }
+        List<Integer> list2 = node.idxs;
+        int i = list1.size() - 1, j = list2.size() - 1;
+        while (i >= 0 && j >= 0) {
+            if (list1.get(i) > list2.get(j)) --i;
+            else if (list1.get(i) < list2.get(j)) --j;
+            else return list1.get(i);
+        }
+        return -1;
+    }
+
+    private static class Trie {
+        Trie[] next;
+        List<Integer> idxs;
+
+        public Trie() {
+            next = new Trie[26];
+            idxs = new ArrayList<>();
+        }
+
+        /**
+         * 插入字典树
+         *
+         * @param word 待插入字符串
+         * @param idx  字符串所在下标
+         * @param flag 正向存储和反向存储的标志位
+         */
+        private void insert(String word, int idx, boolean flag) {
+            Trie node = this;
+            node.idxs.add(idx);
+            int n = word.length();
+            for (int i = flag ? n - 1 : 0; i >= 0 && i < n; i += flag ? -1 : 1) {
+                int u = word.charAt(i) - 'a';
+                if (node.next[u] == null) {
+                    node.next[u] = new Trie();
+                }
+                node = node.next[u];
+                node.idxs.add(idx);
+            }
+        }
+    }
+
+    // 暴力
+/*    Map<String, Integer> map;
+
+    public P745(String[] words) {
+        map = new HashMap<>();
+        for (int i = 0; i < words.length; ++i) {
+            String word = words[i];
+            int n = word.length();
+            for (int pref = 1; pref <= n; ++pref) {
+                for (int suff = 1; suff <= n; ++suff) {
+                    map.put(word.substring(0, pref) + "_" + word.substring(n - suff), i);
+                }
+            }
+        }
+    }
+
+    public int f(String pref, String suff) {
+        return map.getOrDefault(pref + "_" + suff, -1);
+    }*/
+
+    /*private static class TrieNode {
         List<Integer> list = new ArrayList<>();
         TrieNode[] children = new TrieNode[26];
     }
@@ -61,5 +154,5 @@ public class P745 {
             p = p.children[cur];
         }
         return p.list;
-    }
+    }*/
 }

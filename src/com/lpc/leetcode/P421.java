@@ -19,8 +19,54 @@ public class P421 {
         System.out.println(findMaximumXOR(nums));
     }
 
-    // 利用性质： a ^ b = c ，则 a ^ c = b，且 b ^ c = a
     public int findMaximumXOR(int[] nums) {
+        Trie trie = new Trie();
+        int ans = 0;
+        for (int x : nums) {
+            trie.insert(x);
+            int y = trie.getVal(x);
+            ans = Math.max(ans, x ^ y);
+        }
+        return ans;
+    }
+
+    private static class Trie {
+        Trie[] next;
+
+        public Trie() {
+            next = new Trie[2];
+        }
+
+        public void insert(int x) {
+            Trie node = this;
+            for (int i = 31; i >= 0; --i) {
+                int u = (x >> i) & 1;
+                if (node.next[u] == null) {
+                    node.next[u] = new Trie();
+                }
+                node = node.next[u];
+            }
+        }
+
+        public int getVal(int x) {
+            Trie node = this;
+            int ans = 0;
+            for (int i = 31; i >= 0; --i) {
+                int a = (x >> i) & 1, b = 1 - a;
+                if (node.next[b] != null) {
+                    ans |= (b << i);
+                    node = node.next[b];
+                } else {
+                    ans |= (a << i);
+                    node = node.next[a];
+                }
+            }
+            return ans;
+        }
+    }
+
+    // 利用性质： a ^ b = c ，则 a ^ c = b，且 b ^ c = a
+    public int findMaximumXOR1(int[] nums) {
         int res = 0, mask = 0;
         for (int i = 30; i >= 0; i--) {
             mask = mask | (1 << i);

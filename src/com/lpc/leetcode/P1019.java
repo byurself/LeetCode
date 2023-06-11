@@ -96,7 +96,7 @@ public class P1019 {
         return ans;
     }*/
 
-    public static class ListNode {
+    private static class ListNode {
         int val;
         ListNode next;
 

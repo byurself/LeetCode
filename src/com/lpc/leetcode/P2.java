@@ -36,8 +36,8 @@ public class P2 {
             tail.next = new ListNode(c % 10);
             tail = tail.next;
             c /= 10;
-            l1 = l1 == null ? null : l1.next;
-            l2 = l2 == null ? null : l2.next;
+            if (l1 != null) l1 = l1.next;
+            if (l2 != null) l2 = l2.next;
         }
         if (c > 0) {
             tail.next = new ListNode(c);

@@ -3,7 +3,7 @@ package com.lpc.leetcode;
 import org.junit.Test;
 
 /**
- * Validate IP Address
+ * 验证IP地址
  *
  * @author byu_rself
  * @date 2022/5/29 13:51
@@ -16,46 +16,47 @@ public class P468 {
         System.out.println(validIPAddress(queryIp));
     }
 
-    public String validIPAddress(String ip) {
-        if (ip.contains(".") && check4(ip)) return "IPv4";
-        if (ip.contains(":") && check6(ip)) return "IPv6";
-        return "Neither";
+    public String validIPAddress(String queryIP) {
+        if (queryIP.contains(".") && checkIPv4(queryIP)) return "IPv4";
+        else if (queryIP.contains(":") && checkIPv6(queryIP)) return "IPv6";
+        else return "Neither";
     }
-    boolean check4(String ip) {
-        int n = ip.length(), cnt = 0;
-        char[] cs = ip.toCharArray();
-        for (int i = 0; i < n && cnt <= 3; ) {
-            // 找到连续数字段，以 x 存储
+
+    private boolean checkIPv4(String ip) {
+        char[] s = ip.toCharArray();
+        int n = s.length, cnt = 0;
+        for (int i = 0; i < n && cnt < 4; ) {
             int j = i, x = 0;
-            while (j < n && cs[j] >= '0' && cs[j] <= '9' && x <= 255) x = x * 10 + (cs[j++] - '0');
-            // 非 item 字符之间没有 item
+            while (j < n && (s[j] >= '0' && s[j] <= '9') && x <= 255) x = x * 10 + (s[j++] - '0');
+            // 没有数字
             if (i == j) return false;
-            // 含前导零 或 数值大于 255
-            if ((j - i > 1 && cs[i] == '0') || (x > 255)) return false;
+            // 前导零 或 数值大于 255
+            if ((j - i > 1 && s[i] == '0') || x > 255) return false;
             i = j + 1;
             if (j == n) continue;
-            // 存在除 . 以外的其他非数字字符
-            if (cs[j] != '.') return false;
-            cnt++;
+            // 存在除'.'以外的其他字符
+            if (s[j] != '.') return false;
+            ++cnt;
         }
-        // 恰好存在 3 个不位于两端的 .
-        return cnt == 3 && cs[n - 1] != '.';
+        // 恰好存在三个不位于两端的'.'
+        return cnt == 3 && s[0] != '.' && s[n - 1] != '.';
     }
-    boolean check6(String ip) {
-        int n = ip.length(), cnt = 0;
-        char[] cs = ip.toCharArray();
-        for (int i = 0; i < n && cnt <= 7; ) {
+
+    private boolean checkIPv6(String ip) {
+        char[] s = ip.toCharArray();
+        int n = s.length, cnt = 0;
+        for (int i = 0; i < n && cnt < 8; ) {
             int j = i;
-            while (j < n && ((cs[j] >= 'a' && cs[j] <= 'f') || (cs[j] >= 'A' && cs[j] <= 'F') || (cs[j] >= '0' && cs[j] <= '9'))) j++;
-            // 非 item 字符之间没有 item 或 长度超过 4
+            while (j < n && ((s[j] >= 'a' && s[j] <= 'f') || (s[j] >= 'A' && s[j] <= 'F') || (s[j] >= '0' && s[j] <= '9'))) ++j;
+            // 如果没有字符或者长度超过4
             if (i == j || j - i > 4) return false;
             i = j + 1;
             if (j == n) continue;
-            // 存在除 : 以外的其他非数字字符
-            if (cs[j] != ':') return false;
-            cnt++;
+            // 存在除':'以外的其他字符
+            if (s[j] != ':') return false;
+            ++cnt;
         }
-        // 恰好存在 7 个不位于两段的 :
-        return cnt == 7 && cs[n - 1] != ':';
+        // 恰好存在七个不位于两端的":"
+        return cnt == 7 && s[0] != ':' && s[n - 1] != ':';
     }
 }

@@ -23,6 +23,26 @@ public class P16 {
         Arrays.sort(nums);
         int n = nums.length, ans = nums[0] + nums[1] + nums[2];
         for (int i = 0; i < n - 2; ++i) {
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+
+            int t = nums[i] + nums[i + 1] + nums[i + 2];
+            if (t > target) {
+                // 无论后面怎么选，选出的三个数的和不会比当前小
+                if (t - target < Math.abs(ans - target)) {
+                    ans = t;
+                }
+                break;
+            }
+
+            t = nums[i] + nums[n - 2] + nums[n - 1];
+            if (t < target) {
+                // 由于已经排序，当前和仍小于target，则无法找到比当前更优的答案，跳过后续步骤
+                if (target - t < Math.abs(ans - target)) {
+                    ans = t;
+                }
+                continue;
+            }
+
             int j = i + 1, k = n - 1;
             while (j < k) {
                 int sum = nums[i] + nums[j] + nums[k];

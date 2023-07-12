@@ -20,6 +20,21 @@ public class P451 {
 
     public String frequencySort(String s) {
         Map<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < s.length(); ++i) {
+            char c = s.charAt(i);
+            map.merge(c, 1, Integer::sum);
+        }
+        List<Character> list = new ArrayList<>(map.keySet());
+        list.sort((a, b) -> map.get(b) - map.get(a));
+        StringBuilder builder = new StringBuilder();
+        for (char c : list) {
+            builder.append(String.valueOf(c).repeat(map.get(c)));
+        }
+        return builder.toString();
+    }
+
+    public String frequencySort1(String s) {
+        Map<Character, Integer> map = new HashMap<>();
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             map.put(c, map.getOrDefault(c, 0) + 1);

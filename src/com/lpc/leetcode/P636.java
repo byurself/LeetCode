@@ -28,6 +28,25 @@ public class P636 {
     public int[] exclusiveTime(int n, List<String> logs) {
         int[] ans = new int[n];
         Deque<Integer> stack = new ArrayDeque<>();
+        int cur = -1;
+        for (String log : logs) {
+            String[] s = log.split(":");
+            int index = Integer.parseInt(s[0]), timestamp = Integer.parseInt(s[2]);
+            if (s[1].equals("start")) {
+                if (!stack.isEmpty()) ans[stack.peek()] += timestamp - cur;
+                stack.push(index);
+                cur = timestamp;
+            } else {
+                ans[stack.pop()] += timestamp - cur + 1;
+                cur = timestamp + 1;
+            }
+        }
+        return ans;
+    }
+
+    public int[] exclusiveTime1(int n, List<String> logs) {
+        int[] ans = new int[n];
+        Deque<Integer> stack = new ArrayDeque<>();
         int last = -1;
         for (String log : logs) {
             String[] ss = log.split(":");

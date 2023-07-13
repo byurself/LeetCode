@@ -17,20 +17,21 @@ public class P670 {
     }
 
     public int maximumSwap(int num) {
-        char[] array = String.valueOf(num).toCharArray();
-        int maxIndex;
-        for (int i = 0; i < array.length; i++) {
-            maxIndex = i;
-            for (int j = array.length - 1; j >= i + 1; j--) {
-                if (array[j] > array[maxIndex]) {
+        char[] nums = String.valueOf(num).toCharArray();
+        int n = nums.length;
+        for (int i = 0; i < n; ++i) {
+            int maxIndex = i;
+            // 从后往前选择一个最大的，这个最大的离i越远越好，比如1993，1交换第二个9更优，所以j倒序遍历
+            for (int j = n - 1; j >= i + 1; --j) {
+                if (nums[j] > nums[maxIndex]) {
                     maxIndex = j;
                 }
             }
             if (maxIndex != i) {
-                char temp = array[i];
-                array[i] = array[maxIndex];
-                array[maxIndex] = temp;
-                return Integer.parseInt(new String(array));
+                char temp = nums[maxIndex];
+                nums[maxIndex] = nums[i];
+                nums[i] = temp;
+                return Integer.parseInt(new String(nums));
             }
         }
         return num;

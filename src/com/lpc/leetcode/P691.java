@@ -5,7 +5,7 @@ import org.junit.Test;
 import java.util.Arrays;
 
 /**
- * Stickers to Spell Word
+ * 贴纸拼词
  *
  * @author byu_rself
  * @date 2022/5/14 17:20
@@ -19,26 +19,32 @@ public class P691 {
         System.out.println(minStickers(stickers, target));
     }
 
+    String[] stickers;
+    String target;
+    int[] cache;
+    int m;
+
     public int minStickers(String[] stickers, String target) {
-        int m = target.length();
-        int[] memo = new int[1 << m];
-        Arrays.fill(memo, -1);
-        memo[0] = 0;
-        int res = dp(stickers, target, memo, (1 << m) - 1);
-        return res <= m ? res : -1;
+        m = target.length();
+        cache = new int[1 << m];
+        Arrays.fill(cache, -1);
+        cache[0] = 0;
+        this.stickers = stickers;
+        this.target = target;
+        int ans = dfs((1 << m) - 1);
+        return ans <= m ? ans : -1;
     }
 
-    public int dp(String[] stickers, String target, int[] memo, int mask) {
-        int m = target.length();
-        if (memo[mask] < 0) {
-            int res = m + 1;
+    private int dfs(int mask) {
+        if (cache[mask] < 0) {
+            int ans = m + 1;
             for (String sticker : stickers) {
                 int left = mask;
                 int[] cnt = new int[26];
-                for (int i = 0; i < sticker.length(); i++) {
-                    cnt[sticker.charAt(i) - 'a']++;
+                for (int i = 0; i < sticker.length(); ++i) {
+                    ++cnt[sticker.charAt(i) - 'a'];
                 }
-                for (int i = 0; i < target.length(); i++) {
+                for (int i = 0; i < m; ++i) {
                     char c = target.charAt(i);
                     if (((mask >> i) & 1) == 1 && cnt[c - 'a'] > 0) {
                         cnt[c - 'a']--;
@@ -46,11 +52,11 @@ public class P691 {
                     }
                 }
                 if (left < mask) {
-                    res = Math.min(res, dp(stickers, target, memo, left) + 1);
+                    ans = Math.min(ans, dfs(left) + 1);
                 }
             }
-            memo[mask] = res;
+            cache[mask] = ans;
         }
-        return memo[mask];
+        return cache[mask];
     }
 }

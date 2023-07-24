@@ -85,22 +85,19 @@ public class P42 {
      * 动态规划
      */
     public int trap2(int[] height) {
-        int sum = 0, length = height.length;
-        int[] left = new int[length], right = new int[length];
-
-        for (int i = 1; i < length - 1; i++) {
-            left[i] = Math.max(left[i - 1], height[i - 1]);
+        int n = height.length;
+        int[] leftMax = new int[n], rightMax = new int[n];
+        leftMax[0] = height[0];
+        rightMax[n - 1] = height[n - 1];
+        for (int i = 1; i < n; ++i) {
+            leftMax[i] = Math.max(leftMax[i - 1], height[i]);
+            rightMax[n - i - 1] = Math.max(rightMax[n - i], height[n - i - 1]);
         }
-        for (int i = length - 2; i >= 0; i--) {
-            right[i] = Math.max(right[i + 1], height[i + 1]);
+        int ans = 0;
+        for (int i = 0; i < n; ++i) {
+            ans += Math.min(leftMax[i], rightMax[i]) - height[i];
         }
-        for (int i = 1; i < length - 1; i++) {
-            int min = Math.min(left[i], right[i]);
-            if (min > height[i]) {
-                sum = sum + (min - height[i]);
-            }
-        }
-        return sum;
+        return ans;
     }
 
     /**

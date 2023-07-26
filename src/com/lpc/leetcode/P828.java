@@ -32,9 +32,8 @@ public class P828 {
             int index = cs[i] - 'A';
             // cur字符的索引不是-1，计算cur字符的贡献值
             if (curIndexMap[index] > -1) {
-                ans += (i - curIndexMap[index]) * (curIndexMap[index] - lastIndexMap[index]);
+                ans += (curIndexMap[index] - lastIndexMap[index]) * (i - curIndexMap[index]);
             }
-            // 滚动存放cur和last
             lastIndexMap[index] = curIndexMap[index];
             curIndexMap[index] = i;
         }

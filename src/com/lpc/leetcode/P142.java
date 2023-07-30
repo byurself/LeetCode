@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * 环形链表 II
+ * 环形链表II
  *
  * @author byu_rself
  * @date 2022/10/8 16:45
@@ -12,6 +12,34 @@ import java.util.Set;
 public class P142 {
 
     public ListNode detectCycle(ListNode head) {
+        ListNode fast = head, slow = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            // 存在环
+            if (slow == fast) {
+                ListNode ans = head;
+                while (ans != slow) {
+                    ans = ans.next;
+                    slow = slow.next;
+                }
+                return ans;
+            }
+        }
+        return null;
+    }
+
+    public ListNode detectCycle3(ListNode head) {
+        Set<ListNode> set = new HashSet<>();
+        ListNode p = head;
+        while (p != null) {
+            if (!set.add(p)) return p;
+            p = p.next;
+        }
+        return null;
+    }
+
+    public ListNode detectCycle2(ListNode head) {
         ListNode p = head;
         Set<ListNode> set = new HashSet<>();
         while (p != null) {

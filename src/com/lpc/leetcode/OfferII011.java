@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 0 和 1 个数相同的子数组
+ * 0和1个数相同的子数组
  *
  * @author byu_rself
  * @date 2022/8/22 14:24
@@ -20,17 +20,16 @@ public class OfferII011 {
     }
 
     public int findMaxLength(int[] nums) {
-        int ans = 0, count = 0;
+        int ans = 0, sum = 0;
         Map<Integer, Integer> map = new HashMap<>();
         map.put(0, -1);
-        for (int i = 0; i < nums.length; i++) {
-            if (nums[i] == 1) count++;
-            else count--;
-            if (map.containsKey(count)) {
-                int preIndex = map.get(count);
+        for (int i = 0; i < nums.length; ++i) {
+            sum += nums[i] == 1 ? 1 : -1;
+            if (map.containsKey(sum)) {
+                int preIndex = map.get(sum);
                 ans = Math.max(ans, i - preIndex);
             } else {
-                map.put(count, i);
+                map.put(sum, i);
             }
         }
         return ans;

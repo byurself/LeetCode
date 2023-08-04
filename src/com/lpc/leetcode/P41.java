@@ -12,16 +12,16 @@ import java.util.Set;
 public class P41 {
 
     public int firstMissingPositive(int[] nums) {
-        int length = nums.length;
-        for (int i = 0; i < length; i++) {
-            while (nums[i] > 0 && nums[i] <= length && nums[nums[i] - 1] != nums[i]) {
-                swap(nums, nums[i] - 1, i);
+        int n = nums.length;
+        for (int i = 0; i < n; ++i) {
+            while (nums[i] > 0 && nums[i] <= n && nums[i] != nums[nums[i] - 1]) {
+                swap(nums, i, nums[i] - 1);
             }
         }
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < n; ++i) {
             if (nums[i] != i + 1) return i + 1;
         }
-        return length + 1;
+        return n + 1;
     }
 
     private void swap(int[] nums, int a, int b) {

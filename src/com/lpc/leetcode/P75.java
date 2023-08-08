@@ -21,15 +21,15 @@ public class P75 {
 
     public void sortColors(int[] nums) {
         int n = nums.length;
-        int p0 = 0, p2 = n - 1;
-        for (int i = 0; i <= p2; ++i) {
-            while (i <= p2 && nums[i] == 2) {
-                swap(nums, i, p2);
-                --p2;
+        int c0 = 0, c2 = n - 1;
+        for (int c1 = 0; c1 <= c2; ++c1) {
+            while (c1 <= c2 && nums[c1] == 2) {
+                swap(nums, c1, c2);
+                --c2;
             }
-            if (nums[i] == 0) {
-                swap(nums, i, p0);
-                ++p0;
+            if (nums[c1] == 0) {
+                swap(nums, c1, c0);
+                ++c0;
             }
         }
     }
@@ -43,14 +43,12 @@ public class P75 {
 
     public void sortColors1(int[] nums) {
         Map<Integer, Integer> map = new HashMap<>();
-        for (int num : nums) {
-            map.put(num, map.getOrDefault(num, 0) + 1);
-        }
-        int index = 0;
+        for (int num : nums) map.merge(num, 1, Integer::sum);
+        int i = 0;
         for (int key : map.keySet()) {
             int cnt = map.get(key);
             while (cnt-- > 0) {
-                nums[index++] = key;
+                nums[i++] = key;
             }
         }
     }

@@ -3,7 +3,7 @@ package com.lpc.leetcode;
 import org.junit.Test;
 
 /**
- * Merge Sorted Array
+ * 合并两个有序数组
  *
  * @author byu_rself
  * @date 2022/5/25 19:36
@@ -23,6 +23,26 @@ public class P88 {
     }
 
     public void merge(int[] nums1, int m, int[] nums2, int n) {
+        for (int i = m - 1, j = n - 1, k = m + n - 1; j >= 0; --k) {
+            nums1[k] = i >= 0 && nums1[i] > nums2[j] ? nums1[i--] : nums2[j--];
+        }
+    }
+
+    public void merge2(int[] nums1, int m, int[] nums2, int n) {
+        int[] ans = new int[m + n];
+        for (int index = 0, i = 0, j = 0; index < m + n; ++index) {
+            if (i < m && j < n) {
+                ans[index] = nums1[i] <= nums2[j] ? nums1[i++] : nums2[j++];
+            } else if (i < m) {
+                ans[index] = nums1[i++];
+            } else if (j < n) {
+                ans[index] = nums2[j++];
+            }
+        }
+        if (m + n >= 0) System.arraycopy(ans, 0, nums1, 0, m + n);
+    }
+
+    public void merge1(int[] nums1, int m, int[] nums2, int n) {
         int p1 = m - 1, p2 = n - 1;
         int tail = m + n - 1;
         int cur;

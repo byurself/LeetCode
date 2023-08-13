@@ -1,5 +1,7 @@
 package com.lpc.leetcode;
 
+import java.util.PriorityQueue;
+
 /**
  * 合并K个升序链表
  *
@@ -9,6 +11,23 @@ package com.lpc.leetcode;
 public class P23 {
 
     public ListNode mergeKLists(ListNode[] lists) {
+        PriorityQueue<ListNode> q = new PriorityQueue<>((a, b) -> a.val - b.val);
+        for (ListNode node : lists) {
+            if (node != null) {
+                q.offer(node);
+            }
+        }
+        ListNode dummy = new ListNode(), cur = dummy;
+        while (!q.isEmpty()) {
+            ListNode node = q.poll();
+            if (node.next != null) q.offer(node.next);
+            cur.next = node;
+            cur = cur.next;
+        }
+        return dummy.next;
+    }
+
+    public ListNode mergeKLists2(ListNode[] lists) {
         return merge(lists, 0, lists.length - 1);
     }
 

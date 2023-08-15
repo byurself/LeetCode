@@ -22,13 +22,13 @@ public class P1976 {
 
     public int countPaths(int n, int[][] roads) {
         this.n = n;
-        for (int[] info : roads) {
-            int a = info[0], b = info[1], c = info[2];
+        for (int[] road : roads) {
+            int a = road[0], b = road[1], c = road[2];
             g[a][b] = g[b][a] = c;
         }
         dijkstra();
-        for (int[] info : roads) {
-            int a = info[0], b = info[1], c = info[2];
+        for (int[] road : roads) {
+            int a = road[0], b = road[1], c = road[2];
             g[a][b] = g[b][a] = 0;
             if (dist[a] + c == dist[b]) {
                 g[a][b] = c;

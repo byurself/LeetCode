@@ -68,9 +68,8 @@ public class P1444 {
             return sum[r2][c2] - sum[r2][c1] - sum[r1][c2] + sum[r1][c1];
         }
     }
-}
 
-    /*public static final int MOD = (int) 1e9 + 7;
+        /*public static final int MOD = (int) 1e9 + 7;
 
     public int ways(String[] pizza, int k) {
         MatrixSum ms = new MatrixSum(pizza);
@@ -118,5 +117,3 @@ public class P1444 {
         }
     }*/
 }
-
-

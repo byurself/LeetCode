@@ -10,7 +10,37 @@ import java.util.Arrays;
  */
 public class P698 {
 
-    private int[] nums;
+    int[] nums;
+    boolean[] visited;
+    int n, target, k;
+
+    public boolean canPartitionKSubsets(int[] nums, int k) {
+        int total = 0;
+        for (int num : nums) total += num;
+        if (total % k != 0) return false;
+        this.nums = nums;
+        n = nums.length;
+        this.k = k;
+        Arrays.sort(nums);
+        visited = new boolean[n];
+        target = total / k;
+        return dfs(n - 1, 0, 0);
+    }
+
+    private boolean dfs(int idx, int cur, int cnt) {
+        if (cnt == k) return true;
+        if (cur == target) return dfs(n - 1, 0, cnt + 1);
+        for (int i = idx; i >= 0; --i) {
+            if (visited[i] || cur + nums[i] > target) continue;
+            visited[i] = true;
+            if (dfs(i - 1, cur + nums[i], cnt)) return true;
+            visited[i] = false;
+            if (cur == 0) return false;
+        }
+        return false;
+    }
+
+    /*private int[] nums;
     private boolean[] visited;
     private int n, t, k;
 
@@ -39,5 +69,5 @@ public class P698 {
             if (cur == 0) return false;
         }
         return false;
-    }
+    }*/
 }

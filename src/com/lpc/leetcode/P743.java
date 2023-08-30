@@ -10,7 +10,7 @@ import java.util.Arrays;
  */
 public class P743 {
 
-    private static final int INF = Integer.MAX_VALUE / 2;
+    private static final int INF = 0x3f3f3f3f;
 
     public int networkDelayTime(int[][] times, int n, int k) {
         int[][] g = new int[n][n];
@@ -22,15 +22,15 @@ public class P743 {
         int[] dist = new int[n];
         Arrays.fill(dist, INF);
         dist[k - 1] = 0;
-        boolean[] used = new boolean[n];
+        boolean[] visited = new boolean[n];
         for (int i = 0; i < n; ++i) {
             int x = -1;
             for (int y = 0; y < n; ++y) {
-                if (!used[y] && (x == -1 || dist[y] < dist[x])) {
+                if (!visited[y] && (x == -1 || dist[y] < dist[x])) {
                     x = y;
                 }
             }
-            used[x] = true;
+            visited[x] = true;
             for (int y = 0; y < n; ++y) {
                 dist[y] = Math.min(dist[y], dist[x] + g[x][y]);
             }

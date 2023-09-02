@@ -14,12 +14,8 @@ public class P623 {
      * DFS
      */
     public TreeNode addOneRow(TreeNode root, int val, int depth) {
-        if (root == null) {
-            return null;
-        }
-        if (depth == 1) {
-            return new TreeNode(val, root, null);
-        }
+        if (root == null) return null;
+        if (depth == 1) return new TreeNode(val, root, null);
         if (depth == 2) {
             root.left = new TreeNode(val, root.left, null);
             root.right = new TreeNode(val, null, root.right);
@@ -37,20 +33,20 @@ public class P623 {
         if (depth == 1) return new TreeNode(val, root, null);
         int currentDepth = 1;
         Deque<TreeNode> queue = new ArrayDeque<>();
-        if (root != null) queue.addLast(root);
+        if (root != null) queue.offer(root);
         while (!queue.isEmpty()) {
             int size = queue.size();
             while (size-- > 0) {
-                TreeNode p = queue.pollFirst();
+                TreeNode p = queue.poll();
                 if (depth - 1 == currentDepth) {
                     p.left = new TreeNode(val, p.left, null);
                     p.right = new TreeNode(val, null, p.right);
                 } else {
-                    if (p.left != null) queue.addLast(p.left);
-                    if (p.right != null) queue.addLast(p.right);
+                    if (p.left != null) queue.offer(p.left);
+                    if (p.right != null) queue.offer(p.right);
                 }
             }
-            currentDepth++;
+            ++currentDepth;
         }
         return root;
     }

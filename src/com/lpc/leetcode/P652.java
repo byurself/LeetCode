@@ -20,26 +20,24 @@ public class P652 {
         System.out.println(dfs(root));
     }
 
-    Map<String, TreeNode> map = new HashMap<>();
-    Set<TreeNode> set = new HashSet<>();
+    Map<String, Integer> map = new HashMap<>();
+    List<TreeNode> ans = new ArrayList<>();
 
     public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
         dfs(root);
-        return new ArrayList<>(set);
+        return ans;
     }
 
     // 序列化二叉树，如果某一个结果已经出现过一次，就发现了一类重复子树
     private String dfs(TreeNode node) {
         if (node == null) return "";
-        String s = node.val +
-                "(" +
-                dfs(node.left) +
-                ")(" +
-                dfs(node.right) +
-                ")";
-        if (map.containsKey(s)) set.add(map.get(s));
-        else map.put(s, node);
-        return s;
+        StringBuilder builder = new StringBuilder();
+        builder.append(node.val).append("_");
+        builder.append(dfs(node.left)).append(dfs(node.right));
+        String key = builder.toString();
+        map.merge(key, 1, Integer::sum);
+        if (map.get(key) == 2) ans.add(node);
+        return key;
     }
 
     private static class TreeNode {

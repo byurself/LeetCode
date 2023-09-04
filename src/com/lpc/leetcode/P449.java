@@ -2,8 +2,7 @@ package com.lpc.leetcode;
 
 import org.junit.Test;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Deque;
 import java.util.List;
 
@@ -27,45 +26,69 @@ public class P449 {
 
     // Encodes a tree to a single string.
     public String serialize(TreeNode root) {
-        List<Integer> list = new ArrayList<Integer>();
-        postOrder(root, list);
-        String str = list.toString();
-        return str.substring(1, str.length() - 1);
+        if (root == null) return "#,";
+        String left = serialize(root.left);
+        String right = serialize(root.right);
+        return root.val + "," + left + right;
     }
 
     // Decodes your encoded data to tree.
     public TreeNode deserialize(String data) {
-        if (data.isEmpty()) {
-            return null;
-        }
-        String[] arr = data.split(", ");
-        Deque<Integer> stack = new ArrayDeque<Integer>();
-        int length = arr.length;
-        for (int i = 0; i < length; i++) {
-            stack.push(Integer.parseInt(arr[i]));
-        }
-        return construct(Integer.MIN_VALUE, Integer.MAX_VALUE, stack);
+        if (data.isEmpty()) return null;
+        Deque<String> queue = new LinkedList<>(List.of(data.split(",")));
+        return buildTree(queue);
     }
 
-    private void postOrder(TreeNode root, List<Integer> list) {
-        if (root == null) {
-            return;
-        }
-        postOrder(root.left, list);
-        postOrder(root.right, list);
-        list.add(root.val);
-    }
-
-    private TreeNode construct(int lower, int upper, Deque<Integer> stack) {
-        if (stack.isEmpty() || stack.peek() < lower || stack.peek() > upper) {
-            return null;
-        }
-        int val = stack.pop();
-        TreeNode root = new TreeNode(val);
-        root.right = construct(val, upper, stack);
-        root.left = construct(lower, val, stack);
+    private TreeNode buildTree(Deque<String> queue) {
+        String cur = queue.poll();
+        if (cur.equals("#")) return null;
+        TreeNode root = new TreeNode(Integer.parseInt(cur));
+        root.left = buildTree(queue);
+        root.right = buildTree(queue);
         return root;
     }
+
+    /*// Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        if (root == null) return "";
+        StringBuilder builder = new StringBuilder();
+        Deque<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            TreeNode cur = queue.poll();
+            if (cur == null) {
+                builder.append("#").append(",");
+            } else {
+                builder.append(cur.val).append(",");
+                queue.offer(cur.left);
+                queue.offer(cur.right);
+            }
+        }
+        return builder.toString();
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        if (data.isEmpty()) return null;
+        Deque<String> nodes = new LinkedList<>(List.of(data.split(",")));
+        TreeNode root = new TreeNode(Integer.parseInt(nodes.poll()));
+        Deque<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            TreeNode cur = queue.poll();
+            String left = nodes.poll();
+            String right = nodes.poll();
+            if (!left.equals("#")) {
+                cur.left = new TreeNode(Integer.parseInt(left));
+                queue.offer(cur.left);
+            }
+            if (!right.equals("#")) {
+                cur.right = new TreeNode(Integer.parseInt(right));
+                queue.offer(cur.right);
+            }
+        }
+        return root;
+    }*/
 
     private static class TreeNode {
         int val;

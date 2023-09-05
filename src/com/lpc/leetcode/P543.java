@@ -11,17 +11,16 @@ public class P543 {
     int ans;
 
     public int diameterOfBinaryTree(TreeNode root) {
-        ans = 1;
         dfs(root);
-        return ans - 1;
+        return ans;
     }
 
-    private int dfs(TreeNode node) {
-        if (node == null) return 0;
-        int left = dfs(node.left);
-        int right = dfs(node.right);
-        ans = Math.max(ans, left + right + 1);
-        return Math.max(left, right) + 1; // 该节点为根的子树的深度
+    private int dfs(TreeNode root) {
+        if (root == null) return -1; // 下面+1后，对于叶子节点就刚好为0
+        int left = dfs(root.left) + 1; // 左子树最大链长+1
+        int right = dfs(root.right) + 1; // 右子树最大链长+1
+        ans = Math.max(ans, left + right);
+        return Math.max(left, right); // 当前子树最大链长
     }
 
     private static class TreeNode {

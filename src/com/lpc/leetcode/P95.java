@@ -15,18 +15,19 @@ public class P95 {
         return dfs(1, n);
     }
 
-    private List<TreeNode> dfs(int l, int r) {
-        if (l > r) return new ArrayList<>() {{
-            add(null);
-        }};
+    private List<TreeNode> dfs(int left, int right) {
         List<TreeNode> ans = new ArrayList<>();
-        for (int i = l; i <= r; i++) {
-            for (TreeNode x : dfs(l, i - 1)) {
-                for (TreeNode y : dfs(i + 1, r)) {
-                    TreeNode root = new TreeNode(i);
-                    root.left = x;
-                    root.right = y;
-                    ans.add(root);
+        if (left > right) {
+            ans.add(null);
+            return ans;
+        }
+        for (int i = left; i <= right; ++i) {
+            for (TreeNode x : dfs(left, i - 1)) {
+                for (TreeNode y : dfs(i + 1, right)) {
+                    TreeNode node = new TreeNode(i);
+                    node.left = x;
+                    node.right = y;
+                    ans.add(node);
                 }
             }
         }

@@ -11,7 +11,30 @@ import java.util.List;
  */
 public class P1222 {
 
-    static int[][] dirs = new int[][]{{-1, 0}, {0, -1}, {1, 0}, {0, 1}, {1, -1}, {-1, 1}, {-1, -1}, {1, 1}};
+    private static final int[][] dirs = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, 1}, {1, 1}, {-1, -1}, {1, -1}};
+
+    public List<List<Integer>> queensAttacktheKing(int[][] queens, int[] king) {
+        List<List<Integer>> ans = new ArrayList<>();
+        int x = king[0], y = king[1];
+        boolean[][] isQueue = new boolean[8][8];
+        for (int[] q : queens) {
+            isQueue[q[0]][q[1]] = true;
+        }
+        for (int[] d : dirs) {
+            int nx = x + d[0], ny = y + d[1];
+            while (0 <= nx && nx < 8 && 0 <= ny && ny < 8) {
+                if (isQueue[nx][ny]) {
+                    ans.add(List.of(nx, ny));
+                    break;
+                }
+                nx += d[0];
+                ny += d[1];
+            }
+        }
+        return ans;
+    }
+
+    /*static int[][] dirs = new int[][]{{-1, 0}, {0, -1}, {1, 0}, {0, 1}, {1, -1}, {-1, 1}, {-1, -1}, {1, 1}};
 
     public List<List<Integer>> queensAttacktheKing(int[][] queens, int[] king) {
         int x = king[0], y = king[1];
@@ -33,5 +56,5 @@ public class P1222 {
             }
         }
         return ans;
-    }
+    }*/
 }

@@ -18,19 +18,17 @@ public class P310 {
             return ans;
         }
         int[] degree = new int[n];
-        List<Integer>[] list = new List[n];
-        for (int i = 0; i < n; i++) list[i] = new ArrayList<>();
-        for (int[] edge : edges) {
-            list[edge[0]].add(edge[1]);
-            list[edge[1]].add(edge[0]);
-            ++degree[edge[0]];
-            ++degree[edge[1]];
+        List<Integer>[] g = new List[n];
+        Arrays.setAll(g, k -> new ArrayList<>());
+        for (int[] e : edges) {
+            g[e[0]].add(e[1]);
+            g[e[1]].add(e[0]);
+            ++degree[e[0]];
+            ++degree[e[1]];
         }
         Deque<Integer> queue = new ArrayDeque<>();
         for (int i = 0; i < n; i++) {
-            if (degree[i] == 1) {
-                queue.offer(i);
-            }
+            if (degree[i] == 1) queue.offer(i);
         }
         int remainNodes = n;
         while (remainNodes > 2) {
@@ -38,7 +36,7 @@ public class P310 {
             remainNodes -= size;
             for (int i = 0; i < size; i++) {
                 int cur = queue.poll();
-                for (int v : list[cur]) {
+                for (int v : g[cur]) {
                     --degree[v];
                     if (degree[v] == 1) queue.offer(v);
                 }

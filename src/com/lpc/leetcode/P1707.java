@@ -20,19 +20,23 @@ public class P1707 {
     }
 
     private static class Trie {
-        private static final int L = 30;
-        Trie[] children = new Trie[2];
+        private static final int mask = 30;
+        Trie[] next;
         int min = Integer.MAX_VALUE;
+
+        public Trie() {
+            next = new Trie[2];
+        }
 
         public void insert(int val) {
             Trie node = this;
             node.min = Math.min(node.min, val);
-            for (int i = L - 1; i >= 0; i--) {
+            for (int i = mask - 1; i >= 0; i--) {
                 int bit = (val >> i) & 1;
-                if (node.children[bit] == null) {
-                    node.children[bit] = new Trie();
+                if (node.next[bit] == null) {
+                    node.next[bit] = new Trie();
                 }
-                node = node.children[bit];
+                node = node.next[bit];
                 node.min = Math.min(node.min, val);
             }
         }
@@ -43,13 +47,13 @@ public class P1707 {
                 return -1;
             }
             int ans = 0;
-            for (int i = L - 1; i >= 0; --i) {
+            for (int i = mask - 1; i >= 0; --i) {
                 int bit = (val >> i) & 1;
-                if (node.children[bit ^ 1] != null && node.children[bit ^ 1].min <= limit) {
+                if (node.next[bit ^ 1] != null && node.next[bit ^ 1].min <= limit) {
                     ans |= 1 << i;
                     bit ^= 1;
                 }
-                node = node.children[bit];
+                node = node.next[bit];
             }
             return ans;
         }

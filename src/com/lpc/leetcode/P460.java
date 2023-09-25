@@ -12,7 +12,89 @@ import java.util.Map;
  */
 public class P460 {
 
-    private Map<Integer, Node> map;  // 存储缓存的内容
+    Map<Integer, Node> keyToNode = new HashMap<>();
+    Map<Integer, Node> freqToDummy = new HashMap<>();
+    int capacity;
+    int minFreq;
+
+    public P460(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public int get(int key) {
+        Node node = getNode(key);
+        return node == null ? -1 : node.value;
+    }
+
+    public void put(int key, int value) {
+        Node node = getNode(key);
+        if (node != null) {
+            node.value = value;
+            return;
+        }
+        if (keyToNode.size() == capacity) {
+            Node dummy = freqToDummy.get(minFreq);
+            Node backNode = dummy.prev;
+            keyToNode.remove(backNode.key);
+            remove(backNode);
+            if (dummy.prev == dummy) {
+                freqToDummy.remove(minFreq);
+            }
+        }
+        node = new Node(key, value);
+        keyToNode.put(key, node);
+        addFirst(1, node);
+        minFreq = 1;
+    }
+
+    private Node getNode(int key) {
+        if (!keyToNode.containsKey(key)) return null;
+        Node node = keyToNode.get(key);
+        remove(node);
+        Node dummy = freqToDummy.get(node.freq);
+        // 移除空链表
+        if (dummy.prev == dummy) {
+            freqToDummy.remove(node.freq);
+            if (minFreq == node.freq) {
+                ++minFreq;
+            }
+        }
+        addFirst(++node.freq, node);
+        return node;
+    }
+
+    private void addFirst(int freq, Node x) {
+        Node dummy = freqToDummy.computeIfAbsent(freq, k -> newList());
+        x.prev = dummy;
+        x.next = dummy.next;
+        x.prev.next = x;
+        x.next.prev = x;
+    }
+
+    private Node newList() {
+        Node dummy = new Node(0, 0);
+        dummy.prev = dummy;
+        dummy.next = dummy;
+        return dummy;
+    }
+
+    private void remove(Node x) {
+        x.next.prev = x.prev;
+        x.prev.next = x.next;
+    }
+
+    private static class Node {
+        int key, value, freq;
+        Node prev, next;
+
+        public Node(int key, int value) {
+            this.key = key;
+            this.value = value;
+            this.freq = 1;
+        }
+    }
+
+/*    private Map<Integer, Node> map;  // 存储缓存的内容
     private Map<Integer, LinkedHashSet<Node>> frequencyMap; // 存储每个频次对应的双向链表
     private int size;
     private int capacity;
@@ -93,5 +175,5 @@ public class P460 {
             this.key = key;
             this.value = value;
         }
-    }
+    }*/
 }

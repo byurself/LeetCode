@@ -1,6 +1,7 @@
 package com.lpc.leetcode;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * LRU缓存
@@ -10,7 +11,68 @@ import java.util.HashMap;
  */
 public class P146 {
 
-    private HashMap<Integer, Node> map;
+    Map<Integer, Node> map = new HashMap<>();
+    Node dummy = new Node(0, 0);
+    int capacity;
+
+    public P146(int capacity) {
+        this.capacity = capacity;
+        dummy.prev = dummy;
+        dummy.next = dummy;
+    }
+
+    public int get(int key) {
+        Node node = getNode(key);
+        return node == null ? -1 : node.value;
+    }
+
+    public void put(int key, int value) {
+        Node node = getNode(key);
+        if (node != null) {
+            node.value = value;
+            return;
+        }
+        node = new Node(key, value);
+        map.put(key, node);
+        addFirst(node);
+        if (map.size() > capacity) {
+            Node backNode = dummy.prev;
+            map.remove(backNode.key);
+            remove(backNode);
+        }
+    }
+
+    private Node getNode(int key) {
+        if (!map.containsKey(key)) return null;
+        Node node = map.get(key);
+        remove(node);
+        addFirst(node);
+        return node;
+    }
+
+    private void addFirst(Node x) {
+        x.prev = dummy;
+        x.next = dummy.next;
+        x.prev.next = x;
+        x.next.prev = x;
+    }
+
+    private void remove(Node x) {
+        x.prev.next = x.next;
+        x.next.prev = x.prev;
+    }
+
+    private static class Node {
+        int key, value;
+        Node prev, next;
+
+        public Node(int key, int value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+
+    /*private HashMap<Integer, Node> map;
     private DoubleLinkedList cache;
     private int capacity;
 
@@ -42,27 +104,27 @@ public class P146 {
         addRecently(key, value);
     }
 
-    /**
+    *//**
      * 将key提升为最近使用
-     */
+     *//*
     private void makeRecently(int key) {
         Node node = map.get(key);
         cache.remove(node);
         cache.addLast(node);
     }
 
-    /**
+    *//**
      * 添加最近使用的元素
-     */
+     *//*
     private void addRecently(int key, int val) {
         Node x = new Node(key, val);
         cache.addLast(x);
         map.put(key, x);
     }
 
-    /**
+    *//**
      * 删除某一个key
-     */
+     *//*
     private void deleteKey(int key) {
         Node x = map.get(key);
         cache.remove(x);
@@ -74,9 +136,9 @@ public class P146 {
         map.remove(node.key);
     }
 
-    /**
+    *//**
      * 双向链表,新元素向链尾添加，则头节点为最久未使用节点
-     */
+     *//*
     private static class DoubleLinkedList {
         // 头节点
         private Node head;
@@ -93,11 +155,11 @@ public class P146 {
             size = 0;
         }
 
-        /**
-         * 在尾部插入节点
-         *
-         * @param x 节点
-         */
+        *//**
+     * 在尾部插入节点
+     *
+     * @param x 节点
+     *//*
         private void addLast(Node x) {
             x.prev = tail.prev;
             x.next = tail;
@@ -106,22 +168,22 @@ public class P146 {
             size++;
         }
 
-        /**
-         * 删除目标节点
-         *
-         * @param x 节点
-         */
+        *//**
+     * 删除目标节点
+     *
+     * @param x 节点
+     *//*
         private void remove(Node x) {
             x.prev.next = x.next;
             x.next.prev = x.prev;
             size--;
         }
 
-        /**
-         * 删除链表中的第一个节点，并返回该节点
-         *
-         * @return 第一个节点
-         */
+        *//**
+     * 删除链表中的第一个节点，并返回该节点
+     *
+     * @return 第一个节点
+     *//*
         private Node removeFirst() {
             if (head.next == tail) return null;
             Node first = head.next;
@@ -129,19 +191,19 @@ public class P146 {
             return first;
         }
 
-        /**
-         * 返回链表长度
-         *
-         * @return 链表长度
-         */
+        *//**
+     * 返回链表长度
+     *
+     * @return 链表长度
+     *//*
         private int size() {
             return size;
         }
     }
 
-    /**
+    *//**
      * 节点
-     */
+     *//*
     private static class Node {
         private int key;
         private int value;
@@ -152,5 +214,5 @@ public class P146 {
             this.key = k;
             this.value = v;
         }
-    }
+    }*/
 }

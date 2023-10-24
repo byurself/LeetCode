@@ -1,35 +1,20 @@
 package com.lpc.leetcode;
 
-import org.junit.Test;
-
 /**
- * Univalued Binary Tree
+ * 单值二叉树
  *
  * @author byu_rself
  * @date 2022/5/24 9:14
  */
 public class P965 {
 
-    @Test
-    public void solution() {
-
-    }
+    int val = -1;
 
     public boolean isUnivalTree(TreeNode root) {
-        if (root == null) {
-            return true;
-        }
-        if (root.left != null) {
-            if (root.val != root.left.val || !isUnivalTree(root.left)) {
-                return false;
-            }
-        }
-        if (root.right != null) {
-            if (root.val != root.right.val || !isUnivalTree(root.right)) {
-                return false;
-            }
-        }
-        return true;
+        if (val == -1) val = root.val;
+        if (root == null) return true;
+        if (root.val != val) return false;
+        return isUnivalTree(root.left) && isUnivalTree(root.right);
     }
 
     private static class TreeNode {

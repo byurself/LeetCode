@@ -23,6 +23,21 @@ public class P954 {
 
     public boolean canReorderDoubled(int[] arr) {
         Map<Integer, Integer> map = new HashMap<>();
+        for (int x : arr) map.merge(x, 1, Integer::sum);
+        // 0只能与0配对
+        if (map.getOrDefault(0, 0) % 2 != 0) return false;
+        List<Integer> list = new ArrayList<>(map.keySet());
+        list.sort((a, b) -> Math.abs(a) - Math.abs(b));
+        for (int x : list) {
+            int cnt = map.get(x);
+            if (map.getOrDefault(2 * x, 0) < cnt) return false;
+            map.put(2 * x, map.getOrDefault(2 * x, 0) - cnt);
+        }
+        return true;
+    }
+
+    public boolean canReorderDoubled2(int[] arr) {
+        Map<Integer, Integer> map = new HashMap<>();
         for (int i : arr) map.merge(i, 1, Integer::sum);
         List<Integer> list = new ArrayList<>(map.keySet());
         list.sort((a, b) -> a - b);

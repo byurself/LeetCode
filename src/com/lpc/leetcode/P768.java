@@ -6,7 +6,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 /**
- * 最多能完成排序的块 II
+ * 最多能完成排序的块II
  *
  * @author byu_rself
  * @date 2022/8/13 10:23
@@ -21,13 +21,14 @@ public class P768 {
 
     public int maxChunksToSorted(int[] arr) {
         Deque<Integer> stack = new ArrayDeque<>();
-        for (int n : arr) {
-            // 栈非空且当前遍历到的n小于栈顶元素，则需要合成一个排序块进行排序
-            if (!stack.isEmpty() && n < stack.peekFirst()) {
+        for (int x : arr) {
+            if (!stack.isEmpty() && x < stack.peek()) {
                 int max = stack.poll();
-                while (!stack.isEmpty() && n < stack.peekFirst()) stack.pollFirst();
+                while (!stack.isEmpty() && x < stack.peek()) stack.poll();
                 stack.push(max);
-            } else stack.push(n);
+            } else {
+                stack.push(x);
+            }
         }
         return stack.size();
     }

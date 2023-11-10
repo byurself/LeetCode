@@ -11,16 +11,19 @@ import java.util.Arrays;
 public class P1760 {
 
     public int minimumSize(int[] nums, int maxOperations) {
-        int left = 1, right = Arrays.stream(nums).max().getAsInt();
+        int left = 1, right = -1;
+        for (int x : nums) {
+            if (x > right) right = x;
+        }
         while (left < right) {
-            int mid = (left + right) >> 1;
-            long op = 0;
-            for (int num : nums) {
-                op += (num - 1) / mid;
+            int mid = left + right >> 1;
+            long s = 0;
+            for (int x : nums) {
+                s += (x - 1) / mid;
             }
-            if (op <= maxOperations) right = mid;
+            if (s <= maxOperations) right = mid;
             else left = mid + 1;
         }
-        return left;
+        return right;
     }
 }

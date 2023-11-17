@@ -38,9 +38,7 @@ public class P2736 {
                 }
                 ++j;
             }
-            Arrays.binarySearch()
             int p = lowerBound(stack, y);
-            System.out.println(p);
             ans[i] = p < stack.size() ? stack.get(p)[1] : -1;
         }
         return ans;

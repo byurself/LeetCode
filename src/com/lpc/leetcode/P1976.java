@@ -12,29 +12,34 @@ import java.util.Deque;
  */
 public class P1976 {
 
-    private static final int N = 201, MOD = (int) 1e9 + 7;
-    private static final long INF = (long) 1e12;
+    private static final int MOD = (int) 1e9 + 7;
+    private static final long INF = 0x3f3f3f3f;
     int n;
-    long[] dist = new long[N];
-    int[][] g = new int[N][N];
-    int[] in = new int[N];
-    boolean[] visited = new boolean[N];
+    long[] dist;
+    int[][] g;
+    int[] in;
+    boolean[] visited;
 
     public int countPaths(int n, int[][] roads) {
         this.n = n;
+        g = new int[n][n];
+        dist = new long[n];
+        in = new int[n];
+        visited = new boolean[n];
+        for (int[] e : g) Arrays.fill(e, 0x3f3f3f3f);
         for (int[] road : roads) {
-            int a = road[0], b = road[1], c = road[2];
-            g[a][b] = g[b][a] = c;
+            int a = road[0], b = road[1], w = road[2];
+            g[a][b] = g[b][a] = w;
         }
         dijkstra();
         for (int[] road : roads) {
-            int a = road[0], b = road[1], c = road[2];
+            int a = road[0], b = road[1], w = road[2];
             g[a][b] = g[b][a] = 0;
-            if (dist[a] + c == dist[b]) {
-                g[a][b] = c;
+            if (dist[a] + w == dist[b]) {
+                g[a][b] = w;
                 ++in[b];
-            } else if (dist[b] + c == dist[a]) {
-                g[b][a] = c;
+            } else if (dist[b] + w == dist[a]) {
+                g[b][a] = w;
                 ++in[a];
             }
         }
@@ -60,14 +65,15 @@ public class P1976 {
         Arrays.fill(dist, INF);
         dist[0] = 0L;
         for (int i = 0; i < n; ++i) {
-            int t = -1;
+            int k = -1;
             for (int j = 0; j < n; ++j) {
-                if (!visited[j] && (t == -1 || dist[j] < dist[t])) t = j;
+                if (!visited[j] && (k == -1 || dist[j] < dist[k])){
+                    k = j;
+                }
             }
-            visited[t] = true;
+            visited[k] = true;
             for (int j = 0; j < n; ++j) {
-                if (g[t][j] == 0) continue;
-                dist[j] = Math.min(dist[j], dist[t] + g[t][j]);
+                dist[j] = Math.min(dist[j], dist[k] + g[k][j]);
             }
         }
     }

@@ -1,9 +1,6 @@
 package com.lpc.leetcode;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
+import java.util.*;
 
 /**
  * 从第一个节点出发到最后一个节点的受限路径数
@@ -16,48 +13,48 @@ public class P1786 {
     private static final int MOD = (int) 1e9 + 7;
 
     public int countRestrictedPaths(int n, int[][] edges) {
-        Map<Integer, Map<Integer, Integer>> map = new HashMap<>();
+        Map<Integer, List<int[]>> map = new HashMap<>();
         for (int[] e : edges) {
             int a = e[0], b = e[1], w = e[2];
-            Map<Integer, Integer> am = map.getOrDefault(a, new HashMap<>());
-            am.put(b, w);
-            map.put(a, am);
-
-            Map<Integer, Integer> bm = map.getOrDefault(b, new HashMap<>());
-            bm.put(a, w);
-            map.put(b, bm);
+            map.computeIfAbsent(a, k -> new ArrayList<>()).add(new int[]{b, w});
+            map.computeIfAbsent(b, k -> new ArrayList<>()).add(new int[]{a, w});
         }
 
+        // 堆优化 Dijkstra
         int[] dist = new int[n + 1];
-        boolean[] st = new boolean[n + 1];
+        boolean[] visited = new boolean[n + 1];
         Arrays.fill(dist, Integer.MAX_VALUE);
         dist[n] = 0;
-        PriorityQueue<int[]> q = new PriorityQueue<int[]>((a, b) -> a[1] - b[1]);
+        // [点编号, 点距离] 按照距离从小到大
+        PriorityQueue<int[]> q = new PriorityQueue<>((a, b) -> a[1] - b[1]);
         q.add(new int[]{n, 0});
         while (!q.isEmpty()) {
-            int[] e = q.poll();
-            int idx = e[0];
-            if (st[idx]) continue;
-            st[idx] = true;
-            Map<Integer, Integer> mm = map.get(idx);
-            if (mm == null) continue;
-            for (int i : mm.keySet()) {
-                dist[i] = Math.min(dist[i], dist[idx] + mm.get(i));
-                q.add(new int[]{i, dist[i]});
+            int[] cur = q.poll();
+            int idx = cur[0];
+            if (visited[idx]) continue;
+            visited[idx] = true;
+            List<int[]> list = map.get(idx);
+            if (list == null) continue;
+            for (int[] arr : list) {
+                int i = arr[0];
+                dist[i] = Math.min(dist[i], dist[idx] + arr[1]);
+                q.offer(new int[]{i, dist[i]});
             }
         }
 
         int[][] arr = new int[n][2];
-        for (int i = 0; i < n; i++) arr[i] = new int[]{i + 1, dist[i + 1]};
+        // [点编号, 点距离] 按照距离从小到大
+        for (int i = 0; i < n; ++i) arr[i] = new int[]{i + 1, dist[i + 1]};
         Arrays.sort(arr, (a, b) -> a[1] - b[1]);
 
         int[] f = new int[n + 1];
         f[n] = 1;
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; ++i) {
             int idx = arr[i][0], cur = arr[i][1];
-            Map<Integer, Integer> mm = map.get(idx);
-            if (mm == null) continue;
-            for (int next : mm.keySet()) {
+            List<int[]> list = map.get(idx);
+            if (list == null) continue;
+            for (int[] a : list) {
+                int next = a[0];
                 if (cur > dist[next]) {
                     f[idx] += f[next];
                     f[idx] %= MOD;

@@ -21,7 +21,7 @@ public class P2127 {
         Deque<Integer> q = new ArrayDeque<>();
         for (int i = 0; i < n; i++) {
             if (in[i] == 0) {
-                q.add(i);
+                q.offer(i);
             }
         }
         while (!q.isEmpty()) { // 拓扑排序，剪掉图上所有树枝
@@ -29,7 +29,7 @@ public class P2127 {
             int y = favorite[x]; // x 只有一条出边
             rg[y].add(x);
             if (--in[y] == 0) {
-                q.add(y);
+                q.offer(y);
             }
         }
 

@@ -3,6 +3,7 @@ package com.lpc.leetcode;
 import org.junit.Test;
 
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -23,6 +24,73 @@ public class P907 {
     private static final int MOD = (int) (1e9 + 7);
 
     public int sumSubarrayMins(int[] arr) {
+        long ans = 0;
+        int n = arr.length;
+        Deque<Integer> stack = new ArrayDeque<>();
+        stack.push(-1);
+        for (int right = 0; right <= n; ++right) {
+            int x = right < n ? arr[right] : -1;
+            while (stack.size() > 1 && arr[stack.peek()] >= x) {
+                int i = stack.pop();
+                ans += (long) arr[i] * (i - stack.peek()) * (right - i);
+            }
+            stack.push(right);
+        }
+        return (int) (ans % MOD);
+    }
+
+    /*public int sumSubarrayMins(int[] arr) {
+        int n = arr.length;
+        int[] left = new int[n], right = new int[n];
+        Arrays.fill(right, n);
+        Deque<Integer> stack = new ArrayDeque<>();
+        stack.push(-1);
+        for (int i = 0; i < n; ++i) {
+            // 左边界 left[i] 为左侧严格小于 arr[i] 的最近元素位置（不存在时为-1）
+            while (stack.size() > 1 && arr[stack.peek()] >= arr[i]) {
+                right[stack.pop()] = i; // 此时 i 恰好为栈顶的右边界
+            }
+            left[i] = stack.peek();
+            stack.push(i);
+        }
+        long ans = 0;
+        for (int i = 0; i < n; ++i) {
+            ans += (long) arr[i] * (i - left[i]) * (right[i] - i);
+        }
+        return (int) (ans % MOD);
+    }*/
+
+    /*public int sumSubarrayMins(int[] arr) {
+        int n = arr.length;
+        int[] left = new int[n], right = new int[n];
+        Deque<Integer> stack = new ArrayDeque<>();
+        stack.push(-1);
+        for (int i = 0; i < n; ++i) {
+            // 左边界 left[i] 为左侧严格小于 arr[i] 的最近元素位置（不存在时为-1）
+            while (stack.size() > 1 && arr[stack.peek()] >= arr[i]) {
+                stack.pop();
+            }
+            left[i] = stack.peek();
+            stack.push(i);
+        }
+        stack.clear();
+        stack.push(n);
+        for (int i = n - 1; i >= 0; --i) {
+            // 右边界 right[i] 为右侧小于等于 arr[i] 的最近元素位置（不存在时为n）
+            while (stack.size() > 1 && arr[stack.peek()] > arr[i]) {
+                stack.pop();
+            }
+            right[i] = stack.peek();
+            stack.push(i);
+        }
+        long ans = 0;
+        for (int i = 0; i < n; ++i) {
+            ans += (long) arr[i] * (i - left[i]) * (right[i] - i);
+        }
+        return (int) (ans % MOD);
+    }*/
+
+    public int sumSubarrayMins3(int[] arr) {
         if (arr == null || arr.length == 0) {
             return 0;
         }

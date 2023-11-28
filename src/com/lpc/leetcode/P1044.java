@@ -11,26 +11,26 @@ import java.util.Set;
  */
 public class P1044 {
 
+    static final int hash = 1313131;
     long[] h, p;
-    static int hash = 1313131;
     int n;
 
     public String longestDupSubstring(String s) {
         n = s.length();
-        h = new long[n + 1];
-        p = new long[n + 1];
+        h = new long[n + 1]; // 哈希数组
+        p = new long[n + 1]; // 次方数组
         p[0] = 1;
-        for (int i = 0; i < n; ++i) {
-            p[i + 1] = p[i] * hash;
-            h[i + 1] = h[i] * hash + s.charAt(i);
+        for (int i = 1; i <= n; ++i) {
+            p[i] = p[i - 1] * hash;
+            h[i] = h[i - 1] * hash + s.charAt(i - 1);
         }
         String ans = "";
-        int l = 0, r = n - 1;
-        while (l < r) {
-            int mid = l + r + 1 >> 1;
+        int left = 0, right = n - 1;
+        while (left < right) {
+            int mid = left + right + 1 >> 1;
             String t = check(s, mid);
-            if (t.length() != 0) l = mid;
-            else r = mid - 1;
+            if (!t.isEmpty()) left = mid;
+            else right = mid - 1;
             ans = t.length() > ans.length() ? t : ans;
         }
         return ans;

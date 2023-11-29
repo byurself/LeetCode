@@ -9,6 +9,47 @@ package com.lpc.leetcode;
 public class P686 {
 
     public int repeatedStringMatch(String a, String b) {
+        StringBuilder builder = new StringBuilder();
+        int ans = 0, n = a.length(), m = b.length();
+        while (builder.length() < m) {
+            builder.append(a);
+            ++ans;
+        }
+        builder.append(a);
+        int index = strStr(builder.toString(), b);
+        if (index == -1) return -1;
+        return index + m > n * ans ? ans + 1 : ans;
+    }
+
+    private int strStr(String ss, String pp) {
+        int n = ss.length(), m = pp.length();
+        ss = " " + ss;
+        pp = " " + pp;
+        char[] s = ss.toCharArray(), p = pp.toCharArray();
+        int[] next = new int[m + 1];
+        for (int i = 1, j = 0; i < m; ) {
+            if (j == 0 || p[i] == p[j]) {
+                ++i;
+                ++j;
+                next[i] = j;
+            } else {
+                j = next[j];
+            }
+        }
+        int i = 1, j = 1;
+        while (i <= n && j <= m) {
+            if (j == 0 || s[i] == p[j]) {
+                ++i;
+                ++j;
+            } else {
+                j = next[j];
+            }
+        }
+        if (j > m) return i - m - 1;
+        else return -1;
+    }
+
+/*    public int repeatedStringMatch(String a, String b) {
         StringBuilder sb = new StringBuilder();
         int ans = 0;
         while (sb.length() < b.length()) {
@@ -40,5 +81,5 @@ public class P686 {
             if (j == n) return i - n; // 整串匹配成功
         }
         return -1;
-    }
+    }*/
 }

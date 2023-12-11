@@ -11,7 +11,67 @@ import java.util.List;
  */
 public class P1631 {
 
-    int[] p;
+    private static final int[][] dirs = new int[][]{{1, 0}, {0, 1}};
+
+    public int minimumEffortPath(int[][] heights) {
+        int m = heights.length, n = heights[0].length;
+        UnionFind p = new UnionFind(m * n);
+        List<int[]> edges = new ArrayList<>();
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                for (int[] dir : dirs) {
+                    int x = i + dir[0], y = j + dir[1];
+                    if (x < 0 || x >= m || y < 0 || y >= n) continue;
+                    int diff = Math.abs(heights[i][j] - heights[x][y]);
+                    edges.add(new int[]{i * n + j, x * n + y, diff});
+                }
+            }
+        }
+        edges.sort((a, b) -> a[2] - b[2]);
+        for (int[] e : edges) {
+            p.union(e[0], e[1]);
+            if (p.connected(0, m * n - 1)) return e[2];
+        }
+        return 0;
+    }
+
+    private static class UnionFind {
+        int[] p;
+        int[] size;
+
+        public UnionFind(int n) {
+            p = new int[n];
+            size = new int[n];
+            for (int i = 0; i < n; ++i) {
+                p[i] = i;
+                size[i] = 1;
+            }
+        }
+
+        public int find(int x) {
+            if (p[x] != x) p[x] = find(p[x]);
+            return p[x];
+        }
+
+        public boolean union(int a, int b) {
+            int pa = find(a), pb = find(b);
+            if (pa == pb) return false;
+            if (size[pa] > size[pb]) {
+                p[pb] = pa;
+                size[pa] += size[pb];
+            } else {
+                p[pa] = p[pb];
+                size[pb] += size[pa];
+            }
+            return true;
+        }
+
+        public boolean connected(int a, int b) {
+            return find(a) == find(b);
+        }
+    }
+
+    /*int[] p;
 
     private void union(int a, int b) {
         p[find(a)] = p[find(b)];
@@ -55,5 +115,5 @@ public class P1631 {
             if (query(start, end)) return w;
         }
         return 0;
-    }
+    }*/
 }

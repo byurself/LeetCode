@@ -11,6 +11,43 @@ import java.util.Deque;
  */
 public class P654 {
 
+    public TreeNode constructMaximumBinaryTree(int[] nums) {
+        TreeNode[] stack = new TreeNode[nums.length];
+        int tt = -1;
+        for (int num : nums) {
+            TreeNode node = new TreeNode(num);
+            while (tt > -1 && stack[tt].val < num) {
+                node.left = stack[tt--];
+            }
+            if (tt > -1) {
+                stack[tt].right = node;
+            }
+            stack[++tt] = node;
+        }
+        return stack[0];
+    }
+
+
+    /*int[] nums;
+
+    public TreeNode constructMaximumBinaryTree(int[] nums) {
+        this.nums = nums;
+        return build(0, nums.length - 1);
+    }
+
+    private TreeNode build(int left, int right) {
+        if (left > right) return null;
+        int maxIndex = left;
+        for (int i = left; i <= right; ++i) {
+            if (nums[maxIndex] < nums[i]) maxIndex = i;
+        }
+        TreeNode node = new TreeNode(nums[maxIndex]);
+        node.left = build(left, maxIndex - 1);
+        node.right = build(maxIndex + 1, right);
+        return node;
+    }*/
+
+
     /**
      * 用数组实现单调栈
      */
@@ -34,7 +71,7 @@ public class P654 {
     /**
      * 单调栈
      */
-    public TreeNode constructMaximumBinaryTree(int[] nums) {
+    public TreeNode constructMaximumBinaryTree3(int[] nums) {
         Deque<TreeNode> stack = new ArrayDeque<>();
         for (int num : nums) {
             TreeNode p = new TreeNode(num);
@@ -52,7 +89,7 @@ public class P654 {
         return stack.peekLast();
     }
 
-    public TreeNode constructMaximumBinaryTree1(int[] nums) {
+    /*public TreeNode constructMaximumBinaryTree1(int[] nums) {
         return build(nums, 0, nums.length - 1);
     }
 
@@ -66,7 +103,7 @@ public class P654 {
         p.left = build(nums, l, max - 1);
         p.right = build(nums, max + 1, r);
         return p;
-    }
+    }*/
 
     private static class TreeNode {
         int val;

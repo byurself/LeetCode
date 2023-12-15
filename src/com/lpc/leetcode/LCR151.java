@@ -31,7 +31,7 @@ public class LCR151 {
         return ans;
     }
 
-    public class TreeNode {
+    private static class TreeNode {
         int val;
         TreeNode left;
         TreeNode right;

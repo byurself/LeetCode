@@ -13,7 +13,11 @@ public class P1775 {
     public int minOperations(int[] nums1, int[] nums2) {
         int m = nums1.length, n = nums2.length;
         if (6 * m < n || 6 * n < m) return -1;
-        int d = Arrays.stream(nums2).sum() - Arrays.stream(nums1).sum();
+        // int d = Arrays.stream(nums2).sum() - Arrays.stream(nums1).sum();
+        int d = 0;
+        for (int x : nums2) d += x;
+        for (int x : nums1) d -= x;
+        // 交换，同意让 nums1 的数变大，nums2 的数变小
         if (d < 0) {
             d = -d;
             int[] temp = nums1;
@@ -21,15 +25,16 @@ public class P1775 {
             nums2 = temp;
         }
         int[] cnt = new int[6];
-        for (int num : nums1) ++cnt[6 - num];
-        for (int num : nums2) ++cnt[num - 1];
+        for (int x : nums1) ++cnt[6 - x];
+        for (int x : nums2) ++cnt[x - 1];
         int ans = 0;
-        for (int i = 5; ; i--) {
-            if (i * cnt[i] >= d) {
-                return ans + (d + i - 1) / i;
+        for (int i = 5; i > 0; --i) {
+            while (cnt[i] > 0 && d > 0) {
+                d -= i;
+                --cnt[i];
+                ++ans;
             }
-            ans += cnt[i];
-            d -= i * cnt[i];
         }
+        return d <= 0 ? ans : -1;
     }
 }

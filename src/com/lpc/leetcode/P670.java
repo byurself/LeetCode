@@ -17,6 +17,27 @@ public class P670 {
     }
 
     public int maximumSwap(int num) {
+        char[] nums = Integer.toString(num).toCharArray();
+        int n = nums.length, maxIndex = n - 1, p = -1, q = 0;
+        for (int i = n - 2; i >= 0; --i) {
+            if (nums[i] > nums[maxIndex]) {
+                maxIndex = i;
+            } else if (nums[i] < nums[maxIndex]) {
+                p = i;
+                q = maxIndex;
+            }
+        }
+        // num 本身是降序
+        if (p == -1) {
+            return num;
+        }
+        char temp = nums[p];
+        nums[p] = nums[q];
+        nums[q] = temp;
+        return Integer.parseInt(new String(nums));
+    }
+
+    public int maximumSwap1(int num) {
         char[] nums = String.valueOf(num).toCharArray();
         int n = nums.length;
         for (int i = 0; i < n; ++i) {

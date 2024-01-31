@@ -10,7 +10,33 @@ import java.util.PriorityQueue;
  */
 public class P215 {
 
+    int[] nums;
+
     public int findKthLargest(int[] nums, int k) {
+        this.nums = nums;
+        int n = nums.length;
+        return quickSelect(0, n - 1, n - k);
+    }
+
+    private int quickSelect(int left, int right, int k) {
+        if (left == right) return nums[k];
+        int x = nums[left + right >> 1], i = left - 1, j = right + 1;
+        while (i < j) {
+            do i++; while (nums[i] < x);
+            do j--; while (nums[j] > x);
+            if (i < j) swap(i, j);
+        }
+        if (k <= j) return quickSelect(left, j, k);
+        else return quickSelect(j + 1, right, k);
+    }
+
+    private void swap(int i, int j) {
+        int t = nums[i];
+        nums[i] = nums[j];
+        nums[j] = t;
+    }
+
+    public int findKthLargest2(int[] nums, int k) {
         PriorityQueue<Integer> q = new PriorityQueue<>();
         for (int i = 0; i < k; i++) q.offer(nums[i]);
         for (int i = k; i < nums.length; i++) {
